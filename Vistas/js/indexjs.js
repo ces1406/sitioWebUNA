@@ -11,7 +11,7 @@ var fecha= function(date){
 
 var main=function(){
 	ultimosComentarios();
-	setInterval(ultimosComentarios,2000000);
+	setInterval(ultimosComentarios,50000); //50 segs.
 	var fecha1 = new fecha(new Date());
 	fecha1.actualizar();
 }
@@ -98,8 +98,8 @@ function Comentario (aut,cad,fec,tem,secc,idTe,idCa,idCu,codCu,catCu,matCu,catOp
 				var altoOrig = alto; 
 				//limite de ancho: no mas que el 70% del ancho de "panelDer"
 				//limite de alto: no mas que el 80% del ancho de "panelDer"
-				var limitAncho=Math.trunc((4*anchor)/10);
-				var limitAlto =Math.trunc((5*anchor)/10);	
+				var limitAncho=Math.trunc((65*anchor)/100);
+				var limitAlto =Math.trunc((60*anchor)/100);	
 				var ratio = ancho/alto;
 				if(ancho>limitAncho){//corregir ancho
 					ancho=limitAncho;
@@ -133,12 +133,9 @@ function ultimosComentarios(){
 
 	peticion.onreadystatechange= function (){
 		if(peticion.readyState==4){
-			console.log('llego a 400');
 			if(peticion.status==200){
-				console.log('llego a 200');
-				console.log('data'+peticion.responseText);
+				console.log(peticion.responseText);
 				var rta= JSON.parse(peticion.responseText);	
-				console.log(rta);			
 				var listado = document.getElementById('ultimosComentarios');
 				listado.innerHTML='';
 				var anchoTot = listado.clientWidth;

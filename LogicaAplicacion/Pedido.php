@@ -1,8 +1,8 @@
 <?php
 //namespace LogicaAplicacion;
 
-class Pedido
-{
+class Pedido{
+
     private $nombreControlador;
     private $metodo;
     private $argumentos=array();
@@ -28,34 +28,18 @@ class Pedido
         $url = explode('/',$url);
         $this->argumentos = array_slice($url,2);
         
-        if (!isset($url[0])|| ($url[0] == "") || ($url[0] == null) ) {
-            $this->nombreControlador='ControladorPorDefecto';
-        }else{
-            $this->nombreControlador ='Controlador'.$url[0];
-        }
-        
-        if( !isset($url[1])|| ($url[1] == null)|| (empty($url[1]))){
-            $this->metodo="metodoPorDefecto";
-        }else{
-            $this->metodo = 'metodo'.$url[1];
-        }
+        (!isset($url[0])|| ($url[0] == "") || ($url[0] == null) )? $this->nombreControlador='ControladorPorDefecto'
+            :$this->nombreControlador ='Controlador'.$url[0];
+        ( !isset($url[1])|| ($url[1] == null)|| (empty($url[1])))? $this->metodo="metodoPorDefecto"
+            :$this->metodo = 'metodo'.$url[1];
     }
     
     public function existeControlador() {
-        if(is_readable(DIR_RAIZ.DIR_CONTROLADOR.'/'.$this->getNombreControlador().'.php')){
-            return TRUE;
-        }else{
-            return FALSE;
-        }
+        return (is_readable(DIR_RAIZ.DIR_CONTROLADOR.'/'.$this->getNombreControlador().'.php'));        
     }
     
     public function existeMetodo(){
-        if(is_callable(array($this->getNombreControlador(),$this->getMetodo()))){
-            return TRUE;
-        }else{
-            return FALSE;
-        }
+        return (is_callable(array($this->getNombreControlador(),$this->getMetodo())));
     }
 }
-
 ?>

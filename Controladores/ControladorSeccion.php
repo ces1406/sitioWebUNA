@@ -25,14 +25,16 @@ class ControladorSeccion extends ControladorPorDefecto{
         if(!empty($vecTemas)){
             // Listando los temas de la seccion
             foreach ($vecTemas as $tema){
-                $listaTemas .= '<li class="nav-item li0 enlace "><img src="/Vistas/imagenes/item7.png" width="40" height="40"/><a href="/Seccion/IrTema/';
+                $listaTemas .= '<li class="nav-item li0 enlace "><img src="/Vistas/imagenes/item7.png" width="40" height="40"/>
+                                <a href="/Seccion/IrTema/';
                 $listaTemas .= $tema->getIdTema().'/1" >'.htmlentities($tema->getTitulo()).'</a>	</li>';
             }
         }
         $unHref='<li class="page-item"><a class="page-link" href="/Seccion/irSeccion/'.$nombreSeccion.'/'.$idSeccion.'/';
         $botones = new Paginacion($pagina,$cantTemas,$unHref);
         if ($this->getUsuario()->tieneSesion()) {
-            $subMenuSesion='<a  href="/Seccion/IniciarTema/{idSeccion}/{nombreSeccion}" class="btn btn-secondary enlace" id="botonIniciar">Iniciar un tema</a>';
+            $subMenuSesion='<a  href="/Seccion/IniciarTema/{idSeccion}/{nombreSeccion}" class="btn btn-secondary enlace" 
+                            id="botonIniciar">Iniciar un tema</a>';
         }else{
             $subMenuSesion='';
         }
