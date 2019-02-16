@@ -1,0 +1,9 @@
+	<div class="container">
+	<div id="cuerpo" class="card-deck">
+		
+	{sectorIzquierda}
+
+	{sectorDerecha}
+		
+	</div>
+	<!--div style="clear: both;"></div-->

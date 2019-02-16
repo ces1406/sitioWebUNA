@@ -1,0 +1,153 @@
+/*GENERALES(APLICABLES A TODO EL SITIO)*/
+*{
+	font-family:Montserrat !important;
+}
+h1{
+	color: #EFECEA;
+	font-size: 2.4ex;
+}
+h2{
+	color: #EFECEA;
+	font-size: 2.2ex;
+}
+h3{
+	color: #EFECEA;
+	font-size: 2.0ex;
+}
+h4{
+	color: #EFECEA;
+	font-size: 1.8ex;
+}
+h5{
+	color: #EFECEA;
+	font-size: 1.6ex;
+}
+h6{
+	color: #EFECEA;
+	font-size: 1.4ex;
+}
+p{
+	color: #EFDCEA;
+	font-size: 1.7ex;
+}
+small{
+	font-size: 1.1ex !important;
+	padding: 0ex 0ex 0ex 0ex !important;
+	margin: 0ex 0ex 0ex 0ex !important;
+}
+a{
+	text-decoration: none !important;
+	/*font-size:2.4ex !important;*/
+	color:#e4f7ff!important;
+}
+a:link ,a:visted{
+	text-decoration: none !important;
+	color:#FFFFFF!important;
+}
+a:hover{
+	text-decoration: none !important;
+	color:#FCAF3E !important;
+}
+.btn{
+	background-color:#293238;
+	color: #FFFFFF;
+	border-style:solid solid solid solid;
+	border-radius:1.2ex;
+	border-color:#755B2D;
+	border-width:0.23ex;
+}
+.btn:link ,.btn:visted{
+	text-decoration: none !important;
+	color:#FFFFFF!important;
+}
+.btn:hover{
+	text-decoration: none !important;
+	color:#FCAF3E !important;
+}
+
+/*CABECERA DEL SITIO*/
+.card, .card-footer {
+	font-family:Montserrat!important;
+	color:#EFF7FF !important;
+	background-color: rgba(18,18,28,0.88)!important;
+	padding: 0ex 0ex 0ex 0ex !important;
+}
+#cabecera{
+	border-style: solid solid solid solid !important;
+	border-radius: 1.5ex !important;
+	border-color:rgb(18,18,28) !important;
+	border-width: 0.4ex !important;
+	padding: 0ex 0ex 0ex 0ex !important;
+}
+#logoPrincipal, #aLogo{
+	margin: 0em 0em 0em 0em !important;
+	padding: 0em 0em 0em 0em !important;
+}
+#tituloPagina{
+	font-size: 7.4ex;
+	margin:0ex 0ex 0ex 0ex !important;
+	text-shadow: 1px 4px #798E48;
+}
+#logoUser{
+	border-style: solid solid solid solid !important;
+	border-radius: 0.8ex !important;
+	border-color: #665c3f !important;
+	border-width: 0.4ex !important;
+	width:76px;
+	height:76px;
+}
+
+/*CUERPO DEL SITIO*/
+#cuerpo{
+	background-color: rgba(31,36,45,0.68)!important;
+	border-style: solid solid solid solid;
+	border-radius: 6px;
+	border-color:rgb(30,35,44);
+	border-width: 0.6ex;
+	margin-bottom: 2ex;
+	margin-top:16ex;
+}
+body{
+	background-image: url("/Vistas/imagenes/pollock4.jpg"); 
+	background-size: auto;
+	margin: 0ex 0ex 0ex 0ex;
+	padding: 0ex 0ex 0ex 0ex;
+	font-family:Montserrat!important;
+}
+hr{
+	background-color: #d39713!important;
+}
+#panelIzq, #panelDer{
+	background-color: rgba(18,18,28,0.8)!important;
+	border-style: solid solid solid solid !important;
+	border-radius: 1.5ex !important;
+	border-color:rgb(18,18,28) !important;
+	border-width: 0.6ex !important;
+	padding: 0ex 0ex 0ex 0ex !important;
+}
+#cuerpo h1{
+	color:#e4f7ff !important;
+	font-size: 3.4ex;
+	text-align: center;
+}
+#cuerpo h2{
+	color:#e4f7ff !important;
+	font-size: 2.6ex;
+}
+.card-title{
+	text-align: center !important;
+}
+.separador {
+	width:100%;
+	height:2.0ex;
+}
+
+/*PIE DEL SITIO*/
+#pie {
+	background-color: rgba(18,18,28,0.6)!important;
+	padding: 1ex 0ex 0ex 0ex;
+}
+#pie button {
+	background-color: rgba(18,18,28,0.8)!important;
+	padding: 0.2ex 0ex 0ex 0ex;
+}

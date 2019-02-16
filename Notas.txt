@@ -1,0 +1,10 @@
+Nota 1:
+En index.php respecto de como viene la url y como se divide estaba el comentario:
+
+/* la url parametrizada viene en $args, ejemplos de como los recibo:
+ * www.unaweb.com                            =>  $args=vacio ---->NO MAS index.php
+ * www.unaweb.com/index.php/argu1/argu2/etc  =>  $args=index.php/argu1/argu2/etc
+ * www.unaweb.com/argu1/argu2/etc            =>  $args=/argu1/argu2/etc----->NO MAS index.php
+ * */
+
+ que fue sacado.
