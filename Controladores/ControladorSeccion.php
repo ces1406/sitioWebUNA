@@ -14,7 +14,7 @@ class ControladorSeccion extends ControladorPorDefecto{
     
     public function metodoIrSeccion($nombreSeccion,$idSeccion,$pagina) {
         $vecSeccion=Modelo::buscarSeccion($idSeccion);
-        if (empty($vecSeccion)) {return $this->msjAtencion('no existe la página solicitada'); }
+        if(empty($vecSeccion)) return $this->msjAtencion('no existe la página solicitada');
         $this->seccion->setNombre($vecSeccion["nombreSeccion"]);
         $this->seccion->setId($idSeccion);
         $this->seccion->autoCompletarse();
@@ -22,22 +22,13 @@ class ControladorSeccion extends ControladorPorDefecto{
         $cantTemas= $this->seccion->cantTemas();
         $listaTemas=null;
         $vecTemas=array_slice($temas,($pagina-1)*CANT_TEMAS,CANT_TEMAS,true);
-        if(!empty($vecTemas)){
-            // Listando los temas de la seccion
+        if(!empty($vecTemas)){                          // Listando los temas de la seccion
             foreach ($vecTemas as $tema){
-                $listaTemas .= '<li class="nav-item li0 enlace "><img src="/Vistas/imagenes/item7.png" width="40" height="40"/>
-                                <a href="/Seccion/IrTema/';
-                $listaTemas .= $tema->getIdTema().'/1" >'.htmlentities($tema->getTitulo()).'</a>	</li>';
+                $listaTemas .= $this->getVista()->crearLiTema($tema->getIdTema(),$tema->getTitulo());
             }
         }
         $unHref='<li class="page-item"><a class="page-link" href="/Seccion/irSeccion/'.$nombreSeccion.'/'.$idSeccion.'/';
         $botones = new Paginacion($pagina,$cantTemas,$unHref);
-        if ($this->getUsuario()->tieneSesion()) {
-            $subMenuSesion='<a  href="/Seccion/IniciarTema/{idSeccion}/{nombreSeccion}" class="btn btn-secondary enlace" 
-                            id="botonIniciar">Iniciar un tema</a>';
-        }else{
-            $subMenuSesion='';
-        }
         $this->getVista()->armarHtml();
         $this->setearPanelDerecho();
         $this->getVista()->modificarCuerpo('{colDer}','5');
@@ -48,7 +39,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         $this->getVista()->modificarCuerpo('{pieIzq}','Temas de la seccion');
         $this->getVista()->modificarCuerpo('{listaTemas}',$listaTemas);
         $this->getVista()->modificarCuerpo('{paginacion}',$botones->getBotonera());
-        $this->getVista()->modificarCuerpo('{tieneSesion}',$subMenuSesion);
+        $this->getVista()->modificarCuerpo('{tieneSesion}',($this->getUsuario()->tieneSesion())? $this->getVista()->crearBotonIniciarTema():'');
         $this->getVista()->modificarCuerpo('{nombreSeccion}',$this->seccion->getNombre());
         $this->getVista()->modificarCuerpo('{idSeccion}',$this->seccion->getId());
         return $this->getVista();
@@ -81,85 +72,45 @@ class ControladorSeccion extends ControladorPorDefecto{
         $this->getVista()->modificarCuerpo('{sectorIzquierda}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/cuerpoUnCurso'));
         $this->getVista()->modificarCuerpo('{colIzq}','12');
         $curso=Modelo::buscarUnCurso($idCurso);
-        $titulo='<h2>Materia: '.$curso['nombreMateria'].'<br/>cátedra: '.$curso['nombreCatedra'].'<br/>sede: '.$curso['sede'].'<br/>horario: '
-                .$curso['horario'].'<br/>curso: '.$curso['codigo'].'</h2>';
-        $this->getVista()->modificarCuerpo('{curso}',$titulo);
+        $this->getVista()->modificarCuerpo('{curso}',$this->getVista()->crearTituloTemaCurso($curso['nombreMateria'],$curso['nombreCatedra'],
+                                                                                        $curso['sede'],$curso['horario'],$curso['codigo']));
         $vecComentarios = Modelo::buscarComentsCurso($idCurso);
         $cantComents=count($vecComentarios);
         $listaComents=null;
         $vecComents=array_slice($vecComentarios, ($pagina-1)*CANT_COMENTS,CANT_COMENTS,true);
-        if ($this->getUsuario()->tieneSesion()) {
-            $subMenuSesion='
-            <div class="media">
-                <div class="media-left">
-                    <img src="/Vistas/imagenesUsers/'.$_SESSION["img"].'"class="mr-3 comentarista media-object" >
-                </div>
-                <div class="media-body">
-                    <form class="form-horizontal" id="crearComentario" action="/Seccion/ComentarCurso/'.$idCurso.'" method="POST">
-				        <div class="form-group row" id="formularioRegistro">
-					        <div id="comentarioActual">
-							    <textarea name="unComentario" id="area1"></textarea>
-						    </div>
-					    </div>
-					    <button class="btn btn-secondary btn-sm enlace" type="submit" id="CrearComentario">COmentar</button>
-                    </form>
-                </div>
-            </div>
-            <img src="/Vistas/imagenes/separador.png" class="separador">';
-        }else{
-            $subMenuSesion='';
-        }
+        
         $unHref='<li class="page-item"><a class="page-link" href="/Seccion/Curso/'.$idCurso.'/';
         $botones = new Paginacion($pagina,$cantComents,$unHref);
         // listando los comentarios
         foreach ($vecComents as $comentario){
             $usuario = Modelo::buscarUsuario($comentario["idUsuario"]);
-            $listaComents .= '<div class="media">
-                               <div class="media-left">
-                                <img src="/Vistas/imagenesUsers/'.$usuario["dirImg"].'" class="comentarista media-object" >
-                               </div>
-                               <div class="media-body">
-                                <h3 class="media-heading">'.htmlentities($usuario["apodo"]).' </h3><small class="text-muted">(posteado el '
-                                    .$comentario["fechaHora"].')</small>
-                                <p>Dijo:<br> '.$comentario["contenido"].'</p>
-                               </div>
-                              </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
+            $listaComents .= $this->getVista()->crearComentario($usuario["dirImg"],$usuario["apodo"],$comentario["fechaHora"],$comentario["contenido"]);
         }
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/temas.js');
         $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/temas.css');
         $this->getVista()->modificarCuerpo('{pieIzq}','comentarios de usuarios');
         $this->getVista()->modificarCuerpo('{listaComentarios}',$listaComents);
         $this->getVista()->modificarCuerpo('{paginacion}',$botones->getBotonera());
-        $this->getVista()->modificarCuerpo('{tieneSesion}',$subMenuSesion);
+        $this->getVista()->modificarCuerpo('{tieneSesion}',($this->getUsuario()->tieneSesion())?$this->getVista()->CrearAreaComentaje($_SESSION["img"]):'');
+        $this->getVista()->modificarCuerpo('{action}','action="/Seccion/ComentarCurso/'.$idCurso.'"');
         return $this->getVista();
     }
     
     public function metodoCursosCatedras($param){//,$nombreDeSeccio,$idSeccion,$pagina) {
         $listaCursos=null;
         $busqueda=null;
-        //echo nl2br("param:".$param);
         if($param=='upload'){
             // Sanitizando y validando
             $catedra=trim($_POST['unaCatedra']);
             $codigo=trim($_POST['unCodigo']);
             $materia=trim($_POST['unaMateria']);
-            //$horario=trim($_POST['unHorario']);
             $sede=trim($_POST['unaSede']);
-            if(empty($catedra)||strlen($catedra)>25 ||!is_string($catedra)){
-                return $this->msjAtencion('error en la catedra ingresada');
-            }
-            if(strlen($codigo)>10||!is_string($codigo)){
-                return $this->msjAtencion('error en el codigo ingresado');
-            }
-            if(empty($materia)||strlen($materia)>TAM_MATERIA_MAX||!is_string($materia)){
-                return $this->msjAtencion('error en la materia ingresada');
-            }
-            if(empty($sede)||strlen($sede)>13||!is_string($sede)){
-                return $this->msjAtencion('error en la sede ingresada');
-            }
-            /*if(empty($horario)||strlen($horario)>35||!is_string($horario)){
-                return $this->msjAtencion('error en la materia ingresada');
-            }*/
+
+            if(empty($catedra)||strlen($catedra)>25 ||!is_string($catedra))             return $this->msjAtencion('error en la catedra ingresada');
+            if(strlen($codigo)>10||!is_string($codigo))                                 return $this->msjAtencion('error en el codigo ingresado');
+            if(empty($materia)||strlen($materia)>TAM_MATERIA_MAX||!is_string($materia)) return $this->msjAtencion('error en la materia ingresada');
+            if(empty($sede)||strlen($sede)>13||!is_string($sede))                       return $this->msjAtencion('error en la sede ingresada');
+          
             $horario = $_POST['horaInicio'].':'.$_POST['minInicio'].' a '.$_POST['horaFin'].':'.$_POST['minFin'];
             $cursoRepe=Modelo::buscarCursoRepe($materia,$catedra,$sede,$codigo,$horario);
             if(count($cursoRepe)!=0){
@@ -170,30 +121,19 @@ class ControladorSeccion extends ControladorPorDefecto{
             $curso = Modelo::buscarCurso($materia,$catedra,$sede,$codigo,$horario);
             header('Location:http://'.DOMINIO.'/Seccion/Curso/'.$curso[0]['idCurso'].'/1');
         }elseif($param=='search'){
-            //echo "ES SEARCH";
             // Sanitizando y validando
             $catedra=trim($_POST['unaCatedra']);
             $codigo=trim($_POST['unCodigo']);
             $materia=trim($_POST['unaMateria']);
-            //$horario=trim($_POST['unHorario']);
             $sede=trim($_POST['unaSede']);
-            if(strlen($catedra)>25 ||!is_string($catedra)){
-                return $this->msjAtencion('error en la catedra ingresada');
-            }
-            if(strlen($codigo)>10||!is_string($codigo)){
-                return $this->msjAtencion('error en el codigo ingresado');
-            }
-            if(strlen($materia)>TAM_MATERIA_MAX || !is_string($materia)){
-                return $this->msjAtencion('error en la materia ingresada');
-            }
-            if(strlen($sede)>13||!is_string($sede)){
-                return $this->msjAtencion('error en el codigo ingresado');
-            }
-            /*if(strlen($horario)>35||!is_string($horario)){
-                return $this->msjAtencion('error en el horario ingresado');
-            }*/            
+            if(strlen($catedra)>25 ||!is_string($catedra))                  return $this->msjAtencion('error en la catedra ingresada');
+            if(strlen($codigo)>10||!is_string($codigo))                     return $this->msjAtencion('error en el codigo ingresado');
+            if(strlen($materia)>TAM_MATERIA_MAX || !is_string($materia))    return $this->msjAtencion('error en la materia ingresada');
+            if(strlen($sede)>13||!is_string($sede))                         return $this->msjAtencion('error en el codigo ingresado');
+            
             $horario = $_POST['horaInicio'].':'.$_POST['minInicio'].' a '.$_POST['horaFin'].':'.$_POST['minFin'];
-            if($horario ==': a :')$horario=NULL;
+            if($horario ==': a :') $horario=NULL;
+            
             $vecCursos=Modelo::buscarCurso($materia,$catedra,$sede,$codigo,$horario);
             if(!empty($vecCursos)){
                 $busqueda .='<ul class="navbar-nav " id="listaCursos"><h3>Resultados</h3>';
@@ -211,19 +151,8 @@ class ControladorSeccion extends ControladorPorDefecto{
             }
             $sectorBusq ='';
         }elseif ($param=='default'){
-            /*$vecCursos=Modelo::ultimosCursos();
-            if(!empty($vecCursos)){
-                foreach ($vecCursos as $curso) {
-                    echo nl2br('\nidCurso='.$curso['idCurso']." materia=".$curso['nombreMateria']);
-                    $listaCursos .= '<a href=/Seccion/Curso/'.$curso['idCurso'].'/1" class="list-group-item list-group-item-action flex-column align-items-start ">
-                        <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">Materia: '.$curso['nombreMateria'].'</h5><small>Horario: '
-                            .$curso['horario'].'</small> </div> <p class="mb-1">Catedra: '.$curso['nombreCatedra'].'<br/>Sede: '.$curso['sede']
-                            .'<br/>Código de curso:<br/><small> '.$curso['codigo'].'</small></p> </a>';
-                }
-            }*/
             $sectorBusq = file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioBusquedaCurso');
         }else{
-            echo nl2br("\nES NADA(=?");
             return $this->msjAtencion('pagina inexistente en el sitio');
         }
         
@@ -231,7 +160,6 @@ class ControladorSeccion extends ControladorPorDefecto{
         $this->getVista()->modificarCuerpo('{sectorDerecha}','');
         $this->getVista()->modificarCuerpo('{sectorIzquierda}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/cuerpoCursos'));
         $this->getVista()->modificarCuerpo('{colIzq}','12');
-        //$this->getVista()->modificarCuerpo('{listaCursos}',$listaCursos);
         $this->getVista()->modificarCuerpo('{resultadoBusqueda}',$busqueda);
         $this->getVista()->modificarCuerpo('{buscadorCursos}',$sectorBusq);
         if(isset($_SESSION['idUsuario'])){                      
@@ -239,15 +167,8 @@ class ControladorSeccion extends ControladorPorDefecto{
         }else{
             $this->getVista()->modificarCuerpo('{cargaDeCurso}','');
         }
-
-        for ($i=7; $i <24 ; $i++) { 
-            $hor.='<option>'.str_pad((int)$i,2,"0",STR_PAD_LEFT).'</option>';
-        }
-        for ($i=0; $i <12 ; $i++) { 
-            $min .='<option>'.str_pad((int)($i*5),2,"0",STR_PAD_LEFT).'</option>';
-        }
-        $this->getVista()->modificarCuerpo('{hora}',$hor);
-        $this->getVista()->modificarCuerpo('{minuto}',$min);          
+        
+        $this->getVista()->agregarHoraYMins();          
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/cursos.js');
         $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
         $mat = new ListaMaterias();

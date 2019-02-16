@@ -52,11 +52,8 @@ function Comentario (aut,cad,fec,tem,secc,idTe,idCa,idCu,codCu,catCu,matCu,catOp
 	}
 	this.armarPieYLink=function () {
         var pag;
-        if((this.cantComents%10)==0){
-            pag = this.cantComents/10;
-        }else{
-            pag = Math.trunc((this.cantComents/10))+1;
-		}		
+        ((this.cantComents%10)==0) ? pag = this.cantComents/10: pag = Math.trunc((this.cantComents/10))+1;
+				
 		if(this.idTema != null && this.idTema.length !=0){
 			this.enlace ='Seccion/irTema/'+this.idTema+'/'+pag;
 			this.pie = 'Seccion: '+this.seccion+' Tema: '+this.tema;

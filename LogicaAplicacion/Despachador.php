@@ -1,7 +1,7 @@
 <?php
 
-class Despachador
-{
+class Despachador{
+    
     private $pedido;
     private $controlador;
     

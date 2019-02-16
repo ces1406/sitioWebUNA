@@ -10,11 +10,10 @@ class ControladorPorDefecto
     
     public function __construct(){
         session_start();
-        if(isset($_SESSION['idUsuario'])){
-            $this->usuario = new Usuario($_SESSION['rol'],$_SESSION['idUsuario'],$_SESSION['apodo'],null,$_SESSION['img'],$_SESSION['mail'],$_SESSION['face'],$_SESSION['redSoc1']);
-        }else{
-            $this->usuario = new Usuario(ROL_INV,null,null,null,null,null,null,null);
-        }
+        (isset($_SESSION['idUsuario']))?
+            $this->usuario = new Usuario($_SESSION['rol'],$_SESSION['idUsuario'],$_SESSION['apodo'],null,$_SESSION['img'],
+                                         $_SESSION['mail'],$_SESSION['face'],$_SESSION['redSoc1'])
+            :$this->usuario = new Usuario(ROL_INV,null,null,null,null,null,null,null);
         $this->vista=new Vista($this->getUsuario(),'Base','Base');
     }
     
@@ -49,8 +48,7 @@ class ControladorPorDefecto
             }elseif($seccion['nombreSeccion']=='Cursos por cátedras'){
                 $metodo= 'CursosCatedras/default';
                 $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
-                $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo./*'/'.$seccion["nombreSeccion"];
-                $listaSecciones .= '/'.$seccion["idSeccion"].'/1*/'">'. $seccion["nombreSeccion"].'<br/><h6>';
+                $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo.'">'. $seccion["nombreSeccion"].'<br/><h6>';
                 $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
             }elseif($seccion['nombreSeccion']=='Opiniones de cátedras y profesores'){
                 $metodo= 'IrOpiniones/default';
