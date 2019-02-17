@@ -590,7 +590,7 @@ class Modelo
         if($unMysqli==false){
             return null;
         }
-        $sql="DELETE FROM unaWebDB.unaApuntes WHERE idApunte=".$id;
+        $sql="DELETE FROM unaWebDB.unaApuntes WHERE idApunte='".$id."'";
         
         $resultado=$unMysqli->query($sql);
         Modelo::cerrarConexion($unMysqli);

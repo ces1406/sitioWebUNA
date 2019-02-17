@@ -165,13 +165,11 @@ class Vista{
         $this->modificarCuerpo('{minuto}',$min);   
     }
 
-    public function crearMenuBorrarMsj($idApunte){
+    public function crearMenuBorrarApunte($idApunte){
         return '<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">
-                    <form class="form-inline" id="" action="/Administrar/EliminarApunte'.$idApunte.'" method="POST" enctype="multipart/form-data">
+                    <form class="form-inline formuBorrar" id="" action="" method="POST" enctype="multipart/form-data">
                         <button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">eliminar apunte</button>
-                        <div class="form-group mx-sm-3 mb-2" id="" >
-                            <input type="password" class="form-control" name="unaPassword1" placeholder="password de Admin" style="font-size: 1.6ex;"required>
-                        </div>
+                        <input type="hidden" id="idDeApunte" name="idApunte" value="'.$idApunte.'" >
                     </form>
                 </div>';
     }
@@ -188,7 +186,7 @@ class Vista{
 	             </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
     }
 
-    public function crearMenuBorrarMsj2($idComentario,$idTema,$pagina){
+    public function crearMenuBorrarMsj($idComentario,$idTema,$pagina){
         return '<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">
                     <form class="form-inline formuBorrar" id="" action="" method="POST" enctype="multipart/form-data">
                         <button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">borrar comentario</button>

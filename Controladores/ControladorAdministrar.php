@@ -192,21 +192,23 @@ class ControladorAdministrar extends ControladorPorDefecto
         return $this->getVista();
     }
     
-    public function metodoEliminarApunte() {
+    public function metodoEliminarApunte($idApunte) {
         if(!$this->chequearPass()) return $this->msjAtencion("error en la contraseña ingresada");
-        $idApunte=trim($_POST['unIdApunte']);
-        if (!filter_input(INPUT_POST,'unIdApunte',FILTER_VALIDATE_INT)) {
-            return $this->msjAtencion('error en el id del apunte ingresado');
+        if (!is_numeric($idApunte))return $this->msjAtencion('error en el id del apunte ingresado');
+        if($this->getUsuario()->getRol()=='ADMI'){
+            if($_POST['confirmado']=='si'){
+                Modelo::eliminarApunte($idApunte);
+            }
         }
-        Modelo::eliminarApunte($idApunte);
-        $this->getVista()->armarHtml();
+        header('Location:http://'.DOMINIO.'/Seccion/irAApuntes/default/0/Apuntes/10/1');        
+        /*$this->getVista()->armarHtml();
         $this->getVista()->modificarCuerpo('{sectorIzquierda}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/cuerpoAdmin'));
         $this->getVista()->modificarCuerpo('{sectorDerecha}','');
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/admin.js');
         $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
         $this->setearFormuListarTemas();
         $this->setearFormuListarUsers();        
-        return $this->getVista();
+        return $this->getVista();*/
     }
     
     public function metodoEliminarComentario($idComent,$idTema,$pag){

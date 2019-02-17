@@ -311,9 +311,9 @@ class ControladorSeccion extends ControladorPorDefecto{
             $titulo=trim($_POST['unTitulo']);
             $autor=trim($_POST['unAutor']);
             $materia=trim($_POST['unaMateria']);
-            if(strlen($titulo)>TAM_TITULO_MAX||!is_string($titulo)) return $this->msjAtencion('error en el titulo ingresado');
-            if(strlen($autor)>TAM_AUTOR_MAX||!is_string($autor)) return $this->msjAtencion('error en la autor ingresado');
-            if(strlen($materia)>TAM_MATERIA_MAX||!is_string($materia))return $this->msjAtencion('error en la materia ingresada');
+            if(strlen($titulo)>TAM_TITULO_MAX||!is_string($titulo))     return $this->msjAtencion('error en el titulo ingresado');
+            if(strlen($autor)>TAM_AUTOR_MAX||!is_string($autor))        return $this->msjAtencion('error en la autor ingresado');
+            if(strlen($materia)>TAM_MATERIA_MAX||!is_string($materia))  return $this->msjAtencion('error en la materia ingresada');
             
             $vecApTot=Modelo::buscarApuntes($titulo,$autor,$materia);
             $cantApuntes=count($vecApTot);
@@ -326,7 +326,7 @@ class ControladorSeccion extends ControladorPorDefecto{
                 $this->getVista()->modificarCuerpo('{listaApuntes}','<ul class="navbar-nav " id="listaApuntes">{apuntes}</ul>');
                 $busq ='<br/><h2>Resultado de la búsqueda</h2><br/><div class="list-group">';
                 foreach ($vecAp as $apunte) {
-                    $borrado = ($this->getUsuario()->getRol()=='ADMI')? $this->getVista()->crearMenuBorrarMsj($apunte["idApunte"]) : '';
+                    $borrado = ($this->getUsuario()->getRol()=='ADMI')? $this->getVista()->crearMenuBorrarApunte($apunte["idApunte"]) : '';
                     $busq.= $this->getVista()->crearListaApuntesBuscados($apunte,$borrado);
                 }
                 $busq .= '</div></br>';
@@ -408,9 +408,8 @@ class ControladorSeccion extends ControladorPorDefecto{
                 :'<div clas=""><a href="'.$usuario["redSocial2"].'"> <img src="/Vistas/imagenes/redSocial2.png" class="icono3"></a></div>';
             ($this->getUsuario()->getRol()=='ADMI')?
                 // Solo mostrar la opcion de borrar el comentario (el borrado efectivo se hace en ControladorAdministrar->metodoEliminarComentario)
-                $borrado = $this->getVista()->crearMenuBorrarMsj2($comentario["idComentario"],$idTema,$pagina)                 
+                $borrado = $this->getVista()->crearMenuBorrarMsj($comentario["idComentario"],$idTema,$pagina)                 
                 :$borrado='';
-            /*/Seccion/irTema/'.$idTema.'/'.$pagina.'*/
             $listaComents .= $this->getVista()->crearListaComentarios($usuario["apodo"],$usuario["dirImg"],$face,$redSoc2,$vecFecha,$comentario["contenido"],$borrado);            
         }       
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/temas.js');
