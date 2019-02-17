@@ -23,9 +23,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         $listaTemas=null;
         $vecTemas=array_slice($temas,($pagina-1)*CANT_TEMAS,CANT_TEMAS,true);
         if(!empty($vecTemas)){                          // Listando los temas de la seccion
-            foreach ($vecTemas as $tema){
-                $listaTemas .= $this->getVista()->crearLiTema($tema->getIdTema(),$tema->getTitulo());
-            }
+            foreach ($vecTemas as $tema){  $listaTemas .= $this->getVista()->crearLiTema($tema->getIdTema(),$tema->getTitulo());  }
         }
         $unHref='<li class="page-item"><a class="page-link" href="/Seccion/irSeccion/'.$nombreSeccion.'/'.$idSeccion.'/';
         $botones = new Paginacion($pagina,$cantTemas,$unHref);
@@ -66,6 +64,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         header('Location:http://'.DOMINIO.'/Seccion/IrSeccion/'.$nombreSeccion.'/'.$idSeccion.'/1');
     }
     
+    // ir a un foro de un Curso determinado (de seccion cursos por catedra)
     public function metodoCurso($idCurso,$pagina) {
         $this->getVista()->armarHtml();
         $this->getVista()->modificarCuerpo('{sectorDerecha}','');
@@ -96,6 +95,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         return $this->getVista();
     }
     
+    // Foros creados para cursos por catedra
     public function metodoCursosCatedras($param){//,$nombreDeSeccio,$idSeccion,$pagina) {
         $listaCursos=null;
         $busqueda=null;
@@ -164,6 +164,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         return $this->getVista();  
     }
     
+    // Opiniones de catedras y profesores
     public function metodoIrOpiniones($param,$pagina){
         $listaOpiniones=null;
         $opiniones=null;
@@ -195,7 +196,7 @@ class ControladorSeccion extends ControladorPorDefecto{
             if(strlen($profesor)>90||!is_string($profesor))             return $this->msjAtencion('error en el profesor ingresado');
             // Armando la vista html a devolver
             $listaOpiniones=Modelo::buscarOpinionesCatedra($materia,$catedra,$profesor);
-            $busqueda =  $this->getUsuario()->crearListaOpinionesDeCurso2($listaOpiniones,$materia,$catedra);
+            $busqueda =  $this->getVista()->crearListaOpinionesDeCurso2($listaOpiniones,$materia,$catedra);
             $listaOpiniones=Modelo::ultimasOpiniones();
             rsort($listaOpiniones);
             $opiniones = $this->getVista()->crearListaOpinionesDeCurso3($listaOpiniones);
@@ -231,37 +232,23 @@ class ControladorSeccion extends ControladorPorDefecto{
         return $this->getVista();        
     }
     
+    //ir al foro de opinion de una catedra-curso
     public function metodoIrHiloOpinion($idCatedra,$pagina){
         $this->getVista()->armarHtml();
         $this->getVista()->modificarCuerpo('{sectorDerecha}','');
         $this->getVista()->modificarCuerpo('{sectorIzquierda}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/cuerpoHiloOpinion'));
         $this->getVista()->modificarCuerpo('{colIzq}','12');
-        //$curso=Modelo::buscarUnCurso($idCurso);
         $hilo=Modelo::buscarHiloOpinion($idCatedra);
         $titulo='<h2>Materia:&nbsp; '.$hilo['materia'].'<br/> Cátedra:&nbsp;'.$hilo['catedra'].'<br/> Profesor/es:&nbsp;'.$hilo['profesores'].'</h2>';
         $this->getVista()->modificarCuerpo('{catedra}',$titulo);
-        //$vecComentarios = Modelo::buscarComentsCurso($idCurso);
         $vecComentarios = Modelo::buscarComentsCatedra($idCatedra);
-        //rsort($vecComentarios);
         $cantComents=count($vecComentarios);
         $listaComents=null;
         $vecComents=array_slice($vecComentarios, ($pagina-1)*CANT_COMENTS,CANT_COMENTS,true);
         
         if ($this->getUsuario()->tieneSesion()&&($pagina-1==intdiv($cantComents-1,10))) {
-            $subMenuSesion='<form class="form-horizontal" id="crearComentario" action="/Seccion/ComentarCatedra/'.$idCatedra.'" method="POST">
-				<fieldset>
-					<h2>Agrega un comentario:</h2>
-                	<div class="form-group row" id="formularioRegistro">
-						<label class="col-sm-1 col-form-label" for="comentario" placeholder="agrega una opinion">Opinar:</label>
-						<br>
-                        <div class="col-sm-11">
-							<textarea name="unComentario" id="area1"></textarea>
-                            <small id="avisoTxt"></small>
-						</div>
-					</div>
-					<button class="btn btn-secondary enlace" type="submit" id="comentar">Opinar</button>
-				</fieldset>
-			</form> ';
+            $subMenuSesion=$this->getVista()->crearAreaComentaje($_SESSION["img"]);
+            $this->getVista()->modificarCuerpo('{action}','action="/Seccion/ComentarCatedra/'.$idCatedra.'"');
         }else{
             $subMenuSesion='';
         }
@@ -271,22 +258,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         // listando los comentarios
         foreach ($vecComents as $comentario){
             $usuario = Modelo::buscarUsuario($comentario["idUsuario"]);
-            $vecFecha=date_parse($comentario["fechaHora"]);
-            $listaComents .= '  <div class="media">
-                                    <div class="media-left">
-                                        <img src="/Vistas/imagenesUsers/'.$usuario["dirImg"].'" class="comentarista media-object" >
-                                        <h3 class="media-heading">'.htmlentities($usuario["apodo"]).' </h3>
-                                        <div id="fechaHora">
-                                            <small class="text-muted">'.$vecFecha[day].'/'.$vecFecha[month].'/'.$vecFecha[year].'<br/>'.$vecFecha[hour].':'.$vecFecha[minute].'</small>
-                                        </div>
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="elComentario">
-                                            '.$comentario["contenido"].'
-                                        </div>
-                                    </div>
-                                </div>
-                                <img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
+            $listaComents .= $this->getVista()->crearComentario($usuario["dirImg"],$usuario["apodo"],$comentario["fechaHora"],$comentario["contenido"]);
         }
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/opiniones.js');
         $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/opiniones.css');
@@ -298,9 +270,7 @@ class ControladorSeccion extends ControladorPorDefecto{
     }
 
     public function metodoComentarCatedra($idCatedra) {
-        if(!filter_var($idCatedra,FILTER_VALIDATE_INT)){
-            return $this->msjAtencion("error en la catedra ingresada");
-        }
+        if(!filter_var($idCatedra,FILTER_VALIDATE_INT)) return $this->msjAtencion("error en la catedra ingresada");
         Modelo::comentarCatedra($_SESSION['idUsuario'], $_POST['unComentario'], $idCatedra);
         header('Location:http://'.DOMINIO.'/Seccion/irHiloOpinion/'.$idCatedra.'/1');
     }
@@ -319,30 +289,21 @@ class ControladorSeccion extends ControladorPorDefecto{
             $titulo=trim($_POST['unTitulo']);
             $autor=trim($_POST['unAutor']);
             $materia=trim($_POST['unaMateria']);
-            if(empty($titulo)||strlen($titulo)>TAM_TITULO_MAX||!is_string($titulo)){
-                return $this->msjAtencion('error en el titulo ingresado');
-            }
-            if(empty($autor)||strlen($autor)>TAM_AUTOR_MAX||!is_string($autor)){
-                return $this->msjAtencion('error en el autor ingresado');
-            }
-            if(empty($materia)||strlen($materia)>TAM_MATERIA_MAX||!is_string($materia)){
-                return $this->msjAtencion('error en la materia ingresada');
-            }
+            if(empty($titulo)||strlen($titulo)>TAM_TITULO_MAX||!is_string($titulo))return $this->msjAtencion('error en el titulo ingresado');
+            if(empty($autor)||strlen($autor)>TAM_AUTOR_MAX||!is_string($autor)) return $this->msjAtencion('error en el autor ingresado');
+            if(empty($materia)||strlen($materia)>TAM_MATERIA_MAX||!is_string($materia))return $this->msjAtencion('error en la materia ingresada');
+            
             $enlace=trim($_POST['unaUbicacionUrl']);
-            if(empty($enlace)){
-                return $this->msjAtencion('no indicaste un link al apunte correcto');
-            }
-            if(strlen($_POST['unaUbicacionUrl'])<TAM_LINK_APUNTE_MIN || strlen($_POST['unaUbicacionUrl'])>TAM_LINK_APUNTE_MAX){
+            if(empty($enlace)) return $this->msjAtencion('no indicaste un link al apunte correcto');
+            if(strlen($_POST['unaUbicacionUrl'])<TAM_LINK_APUNTE_MIN || strlen($_POST['unaUbicacionUrl'])>TAM_LINK_APUNTE_MAX)
                 return $this->msjAtencion('el enlace indicado tiene una longitud incorrecta');
-            }
+            
             $vecRepe=Modelo::buscarLinkApunte($enlace);
-            if(!empty($vecRepe)){
-                return $this->msjAtencion('el enlace indicado ya se encuentra cargado (o sea que ese apunte ya está subido)');
-            }
+            if(!empty($vecRepe))return $this->msjAtencion('el enlace indicado ya se encuentra cargado (o sea que ese apunte ya está subido)');
+            
             $vecRepe=Modelo::buscarApunteRepe($titulo,$autor);
-            if(!empty($vecRepe)){
-                return $this->msjAtencion('el autor y titulo indicados ya se encuentran cargados (o sea que ese apunte ya está subido)');
-            }
+            if(!empty($vecRepe))return $this->msjAtencion('el autor y titulo indicados ya se encuentran cargados (o sea que ese apunte ya está subido)');
+            
             Modelo::cargarApunte($titulo,$autor,$materia,$enlace,$_SESSION['idUsuario']);   
             $busq=file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioBusquedaApuntes');
         }else if($param=='search'){
@@ -350,54 +311,28 @@ class ControladorSeccion extends ControladorPorDefecto{
             $titulo=trim($_POST['unTitulo']);
             $autor=trim($_POST['unAutor']);
             $materia=trim($_POST['unaMateria']);
-            if(strlen($titulo)>TAM_TITULO_MAX||!is_string($titulo)){
-                return $this->msjAtencion('error en el titulo ingresado');
-            }
-            if(strlen($autor)>TAM_AUTOR_MAX||!is_string($autor)){
-                return $this->msjAtencion('error en la autor ingresado');
-            }
-            if(strlen($materia)>TAM_MATERIA_MAX||!is_string($materia)){
-                return $this->msjAtencion('error en la materia ingresada');
-            }
+            if(strlen($titulo)>TAM_TITULO_MAX||!is_string($titulo)) return $this->msjAtencion('error en el titulo ingresado');
+            if(strlen($autor)>TAM_AUTOR_MAX||!is_string($autor)) return $this->msjAtencion('error en la autor ingresado');
+            if(strlen($materia)>TAM_MATERIA_MAX||!is_string($materia))return $this->msjAtencion('error en la materia ingresada');
+            
             $vecApTot=Modelo::buscarApuntes($titulo,$autor,$materia);
             $cantApuntes=count($vecApTot);
             $vecAp=array_slice($vecApTot, ($pagina-1)*CANT_COMENTS,CANT_COMENTS,true);
             $unHref='<li class="page-item"><a class="page-link" href="/Seccion/irAApuntes/search/';
             $botones = new Paginacion($pagina,$cantApuntes,$unHref);
             $this->getVista()->modificarCuerpo('{paginacion}',$botones->getBotonera());
+            
             if(!empty($vecAp)){
                 $this->getVista()->modificarCuerpo('{listaApuntes}','<ul class="navbar-nav " id="listaApuntes">{apuntes}</ul>');
                 $busq ='<br/><h2>Resultado de la búsqueda</h2><br/><div class="list-group">';
                 foreach ($vecAp as $apunte) {
-                    if($this->getUsuario()->getRol()=='ADMI'){
-                        $borrado ='<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">
-                                    <form class="form-inline" id="" action="/Administrar/EliminarApunte'.$apunte["idApunte"].'" method="POST" enctype="multipart/form-data">
-                                        <button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">eliminar apunte</button>
-                                        <div class="form-group mx-sm-3 mb-2" id="" >
-                                            <input type="password" class="form-control" name="unaPassword1" placeholder="password de Admin" style="font-size: 1.6ex;"required>
-                                        </div>
-                                    </form>
-                                   </div>';
-                    }else{ 
-                        $borrado='';
-                    }
-
-                    $busq.= '<div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">Titulo: '.$apunte['titulo'].'</h5>
-                                    <small>subido el '.$apunte['fechaSubida']."&nbsp; (id:.".$apunte['idApunte'].')<br/>por:'.$apunte['apodo'].'</small>
-                                </div>
-                                <p class="mb-1">Autor/es: '.$apunte['autores'].'<br/>Materia: '.$apunte['materia'].'
-                                <br/>Dirección para descargarlo:<small> '.$apunte['dirurl'].'</small></p>
-                            <div class="col-mb-1" id="">
-                                      <a class="btn btn-sm enlace " href="'.$apunte['dirurl'].'" >Descargar</a>
-                                      '.$borrado.'
-	                            </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
+                    $borrado = ($this->getUsuario()->getRol()=='ADMI')? $this->getVista()->crearMenuBorrarMsj($apunte["idApunte"]) : '';
+                    $busq.= $this->getVista()->crearListaApuntesBuscados($apunte,$borrado);
                 }
                 $busq .= '</div></br>';
             }else{
-                $busq ='<h3>No se encotraron apuntes</h3>';// de '.$autor.' * '.$titulo.' * '.$materia.'</h3><br/>';
+                $busq ='<h3>No se encotraron apuntes</h3>';
             }
-            //$busq.=file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioBusquedaApuntes');
             $busq.= '<a class="btn btn-sm enlace" href="/Seccion/irAApuntes/default/0/Apuntes/10/1">Limpiar busqueda</a>';
         }else{
             $this->msjError('pagina inexistente en el sitio');

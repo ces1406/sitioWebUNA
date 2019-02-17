@@ -49,14 +49,19 @@ class Vista{
     }
 
     public function crearComentario($dirImg,$apodo,$fecha,$contenido){
+        $vecFecha=date_parse($fecha);
         return '<div class="media">
                     <div class="media-left">
                         <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="comentarista media-object" >
+                        <h3 class="media-heading">'.htmlentities($apodo).' </h3>
+                        <div id="fechaHora">
+                            <small class="text-muted">'.$vecFecha[day].'/'.$vecFecha[month].'/'.$vecFecha[year].'<br/>'.$vecFecha[hour].':'.$vecFecha[minute].'</small>
+                        </div>
                     </div>
                     <div class="media-body">
-                        <h3 class="media-heading">'.htmlentities($apodo).'</h3>
-                        <small class="text-muted">(posteado el '.$fecha.')</small>
-                        <p>Dijo:<br> '.$contenido.'</p>
+                        <div class="elComentario">
+                            '.$contenido.'
+                        </div>
                     </div>
                 </div>
                 <img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
@@ -102,7 +107,6 @@ class Vista{
         }
         return $busqueda;
     }
-
     public function crearListaOpinionesDeCurso($lista,$materia,$catedra){
         $msj = 'Ya existen foros de opiniones sobre<br/>Materia: '.$materia.'&nbsp;Catedra: '.$catedra;
         $msj .= '<br/><p>fijarse si los nombres de catedras son muy similares</p>';
@@ -143,7 +147,6 @@ class Vista{
         }
         return $opiniones;
     }
-    
     public function listaDeOpinionesCurso($lista){
         foreach ($lista as $opinion) {
             $msj .='<a href="/Seccion/IrHiloOpinion/'.$opinion['idCatedra'].'/1" class="enlace">
@@ -153,7 +156,6 @@ class Vista{
         }
         return $msj;
     }
-
     public function agregarHoraYMins(){
         $hor=null;
         $min=null;
@@ -161,6 +163,29 @@ class Vista{
         for ($i=0; $i <12 ; $i++) { $min .='<option>'.str_pad((int)($i*5),2,"0",STR_PAD_LEFT).'</option>';}
         $this->modificarCuerpo('{hora}',$hor);
         $this->modificarCuerpo('{minuto}',$min);   
+    }
+
+    public function crearMenuBorrarMsj($idApunte){
+        return '<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">
+                    <form class="form-inline" id="" action="/Administrar/EliminarApunte'.$idApunte.'" method="POST" enctype="multipart/form-data">
+                        <button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">eliminar apunte</button>
+                        <div class="form-group mx-sm-3 mb-2" id="" >
+                            <input type="password" class="form-control" name="unaPassword1" placeholder="password de Admin" style="font-size: 1.6ex;"required>
+                        </div>
+                    </form>
+                </div>';
+    }
+    public function crearListaApuntesBuscados($apunte,$borrado){
+        return '<div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Titulo: '.$apunte['titulo'].'</h5>
+                    <small>subido el '.$apunte['fechaSubida']."&nbsp; (id:.".$apunte['idApunte'].')<br/>por:'.$apunte['apodo'].'</small>
+                </div>
+                <p class="mb-1">Autor/es: '.$apunte['autores'].'<br/>Materia: '.$apunte['materia'].'
+                <br/>Dirección para descargarlo:<small> '.$apunte['dirurl'].'</small></p>
+                <div class="col-mb-1" id="">
+                    <a class="btn btn-sm enlace " href="'.$apunte['dirurl'].'" >Descargar</a>
+                                      '.$borrado.'
+	             </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
     }
     
 }
