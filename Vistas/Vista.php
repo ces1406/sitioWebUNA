@@ -187,6 +187,38 @@ class Vista{
                                       '.$borrado.'
 	             </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
     }
+
+    public function crearMenuBorrarMsj2($idComentario,$idTema,$pagina){
+        return '<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">
+                    <form class="form-inline formuBorrar" id="" action="" method="POST" enctype="multipart/form-data">
+                        <button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">borrar comentario</button>
+                        <input type="hidden" id="idDeComent" name="idComentario" value="'.$idComentario.'">
+                        <input type="hidden" id="idDeTema" name="idTema" value="'.$idTema.'">
+                        <input type="hidden" id="idDePag" name="pagina" value="'.$pagina.'">
+                    </form>
+                </div>'; 
+    }
+
+    public function crearListaComentarios($apodo,$dirImg,$face,$redSoc2,$vecFecha,$contenido,$borrado){
+        $hora=str_pad((int) $vecFecha[hour],2,"0",STR_PAD_LEFT);
+        $min=str_pad((int) $vecFecha[minute],2,"0",STR_PAD_LEFT);
+        $mes=str_pad((int) $vecFecha[month],2,"0",STR_PAD_LEFT);
+        $dia=str_pad((int) $vecFecha[day],2,"0",STR_PAD_LEFT);
+
+        return '<div class="media">
+                    <div class="media-left">
+                        <h3 class="media-heading">'.htmlentities($apodo).' </h3>
+                        <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="icono2 media-object" >
+                            '.$face.$redSoc2.'
+                    </div>
+                    <div class="media-body "><h6 class="text-right"> '.$dia.'/'.$mes.'/'.$vecFecha[year].'<br/>'.$hora.':'.$min.'</h6>
+                        <div class="contenedor1">                                
+                            <div class="comentario1">'.$contenido.'
+                            </div>
+                        </div>'.$borrado.'         
+                    </div>
+                </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
+    }
     
 }
 

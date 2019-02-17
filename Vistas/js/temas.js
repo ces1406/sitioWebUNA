@@ -23,16 +23,22 @@ function ponerBorrado(event){
 		event.preventDefault();
 		//var form1=document.getElementById('formuBorrar');
 		console.log('por aca');
+		var idCom=document.getElementById('idDeComent').attributes['value'].value;
+		var idTem=document.getElementById('idDeTema').attributes['value'].value;
+		var pag=document.getElementById('idDePag').attributes['value'].value;
+		console.log('+++++++++++++++++++++++++++++++++++++++++');
+		console.log('coment:'+idCom+' tema:'+idTem+' pag:'+pag);
+		console.log('+++++++++++++++++++++++++++++++++++++++++');
 
 		var conte ='<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">';
-		conte += '<form class="form-inline" id="" action="/Administrar/EliminarComentario/" method="POST" enctype="multipart/form-data">';
-		conte += '<h6>El comentario se eliminara permanentemente, esta seguro de borrarlo? &nbsp; </h6> ';
-		conte +='<div class="custom-control custom-radio custom-control-inline"><input type="radio" id="si" name="confirmado" class="custom-control-input"><label class="custom-control-label" for="si">Si</label></div>';
-		conte +='<div class="custom-control custom-radio custom-control-inline"><input type="radio" id="no" name="confirmado" class="custom-control-input"><label class="custom-control-label" for="no">No</label></div>';
-		conte +='<button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">OK</button>';
-		conte +='<div class="form-group mx-sm-3 mb-2 py-0 my-0" id="" >';
-		conte +='<input type="password" class="form-control py-0 my-0" name="unaPassword1" placeholder="password de Admin" style="font-size: 1.6ex;"required>';
-		conte +='</div></form> </div>';		
+		conte += '<form class="form-inline" id="" action="/Administrar/EliminarComentario/'+idCom+'/'+idTem+'/'+pag+'" method="POST" enctype="multipart/form-data">';
+		conte += '	<h6>El comentario se eliminara permanentemente, esta seguro de borrarlo? &nbsp; </h6> ';
+		conte +='	<div class="custom-control custom-radio custom-control-inline"><input type="radio" id="si" name="confirmado" class="custom-control-input" value="si"><label class="custom-control-label" for="si">Si</label></div>';
+		conte +='	<div class="custom-control custom-radio custom-control-inline"><input type="radio" id="no" name="confirmado" class="custom-control-input" value="no"><label class="custom-control-label" for="no">No</label></div>';
+		conte +='	<button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">OK</button>';
+		conte +='	<div class="form-group mx-sm-3 mb-2 py-0 my-0" id="" >';
+		conte +='		<input type="password" class="form-control py-0 my-0" name="unaPassword1" placeholder="password de Admin" style="font-size: 1.6ex;"required>';
+		conte +='	</div></form> </div>';		
 		this.outerHTML =conte;
 		return false;
 	//}  
@@ -102,11 +108,11 @@ function ajustarComentarios(){
 	var contenedores = document.getElementsByClassName('contenedor1');
 	for (let i = 0; i < coments.length; i++) {
 		var element = coments[i];
-		element.style.cssText = 'max-width: '+(85*anchor/100)+'px !important;'; //el 80% del anchor		
+		element.style.cssText = 'max-width: '+(85*anchor/100)+'px !important;'; //el 85% del anchor		
 	}
 	for (let i = 0; i < contenedores.length; i++) {
 		var element = contenedores[i];
-		element.style.cssText = 'min-width: '+(85*anchor/100)+'px !important;'; //el 80% del anchor		
+		element.style.cssText = 'min-width: '+(85*anchor/100)+'px !important;'; //el 85% del anchor		
 	}
 }
 window.onload=function(){

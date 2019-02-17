@@ -359,27 +359,21 @@ class ControladorSeccion extends ControladorPorDefecto{
         $this->getVista()->modificarCuerpo('{colIzq}','12');
         //if existe tema?
         $vecData = Modelo::buscarTema($idTema);
-        if (empty($vecData)) {
-            return $this->msjAtencion('no existe la pagina pedida');
-        }
+        if (empty($vecData)) return $this->msjAtencion('no existe la pagina pedida');
+        
         $tema = new Tema($vecData);
         $this->getVista()->modificarCuerpo('{nombreTema}',htmlentities($tema->getTitulo()));
         $usuario = Modelo::buscarUsuario($tema->getAutor());
         $face=NULL;
         $redSoc2=NULL;
-        if(($usuario["redSocial1"]==NULL)||(empty($usuario["redSocial1"]))){
-            $face = '';
-        }else{
-            $face = '<div class=""><a href="'.$usuario["redSocial1"].'"> <img src="/Vistas/imagenes/face.png" class="icono3" ></a></div>';
-        }
-        if(($usuario["redSocial2"]==NULL)||(empty($usuario["redSocial2"]))){
-            $redSoc2 = '';
-        }else{
-            $redSoc2 = '<div clas=""><a href="'.$usuario["redSocial2"].'"> <img src="/Vistas/imagenes/redSocial2.png" class="icono3"></a></div>';
-        }
+        $face = (($usuario["redSocial1"]==NULL)||(empty($usuario["redSocial1"])))? ''
+                :'<div class=""><a href="'.$usuario["redSocial1"].'"> <img src="/Vistas/imagenes/face.png" class="icono3" ></a></div>';
+        $redSoc2 = (($usuario["redSocial2"]==NULL)||(empty($usuario["redSocial2"])))? ''
+                :'<div clas=""><a href="'.$usuario["redSocial2"].'"> <img src="/Vistas/imagenes/redSocial2.png" class="icono3"></a></div>';
+        
         $this->getVista()->modificarCuerpo('{redesSociales}',$face.$redSoc2);
         $this->getVista()->modificarCuerpo('{autor}',htmlentities($usuario["apodo"]));
-        $this->getVista()->modificarCuerpo('{comentario}',$tema->getComentarioInicial());//,htmlentities($tema->getComentarioInicial()));
+        $this->getVista()->modificarCuerpo('{comentario}',$tema->getComentarioInicial());
         $vecFecha=date_parse($tema->getFecha());
         $hora=str_pad((int) $vecFecha[hour],2,"0",STR_PAD_LEFT);
         $min=str_pad((int) $vecFecha[minute],2,"0",STR_PAD_LEFT);
@@ -395,28 +389,12 @@ class ControladorSeccion extends ControladorPorDefecto{
         $listaComents=null;
         $vecComents=array_slice($vecComentarios, ($pagina-1)*CANT_COMENTS,CANT_COMENTS,true);
         if ($this->getUsuario()->tieneSesion()&&($pagina-1==intdiv($cantComents-1,10))) {
-            $subMenuSesion='
-            <div class="media">
-                <div class="media-left">
-                    <img src="/Vistas/imagenesUsers/'.$_SESSION["img"].'"class="mr-3 media-object icono1" >
-                </div>
-                <div class="media-body">
-                    <form class="form-horizontal" id="crearComentario" action="/Seccion/CrearComentario/'.$idTema.'" method="POST">
-				        <div class="form-group row" id="formularioRegistro">
-					        <div id="comentarioActual">
-							    <textarea name="unComentario" id="area1"></textarea>
-						    </div>
-					    </div>
-					    <button class="btn btn-secondary btn-sm enlace" type="submit" id="CrearComentario">comentar</button>
-                    </form>
-                </div>
-            </div>
-            <img src="/Vistas/imagenes/separador.png" class="separador">';            
+            $subMenuSesion=$this->getVista()->crearAreaComentaje($_SESSION["img"]);
+            $this->getVista()->modificarCuerpo('{action}','action="/Seccion/CrearComentario/'.$idTema.'"');          
         }else{
             $subMenuSesion='';
         }
         $unHref='<li class="page-item"><a class="page-link" href="/Seccion/irTema/'.$idTema.'/';
-        //echo nl2br("\n\n\n\n\n\n\n yendo a paginacion pag:".$pagina." cantComens:".$cantComents."\n");
         $botones = new Paginacion($pagina,$cantComents,$unHref);
         // listando los comentarios
         foreach ($vecComents as $comentario){
@@ -424,66 +402,16 @@ class ControladorSeccion extends ControladorPorDefecto{
             $vecFecha=date_parse($comentario["fechaHora"]);
             $face=NULL;
             $redSoc2=NULL;
-            if(($usuario["redSocial1"]==NULL)||(empty($usuario["redSocial1"]))){
-                $face = '';
-            }else{
-                $face = '<div class=""><a href="'.$usuario["redSocial1"].'"> <img src="/Vistas/imagenes/face.png" class="icono3" ></a></div>';
-            }
-            if(($usuario["redSocial2"]==NULL)||(empty($usuario["redSocial2"]))){
-                $redSoc2 = '';
-            }else{
-                $redSoc2 = '<div clas=""><a href="'.$usuario["redSocial2"].'"> <img src="/Vistas/imagenes/redSocial2.png" class="icono3"></a></div>';
-            }
-            $hora=str_pad((int) $vecFecha[hour],2,"0",STR_PAD_LEFT);
-            $min=str_pad((int) $vecFecha[minute],2,"0",STR_PAD_LEFT);
-            $mes=str_pad((int) $vecFecha[month],2,"0",STR_PAD_LEFT);
-            $dia=str_pad((int) $vecFecha[day],2,"0",STR_PAD_LEFT);
-            if($this->getUsuario()->getRol()=='ADMI'){
-                if(isset($_POST['idComentario'])&&($_POST['idComentario']==$comentario['idComentario'])){
-                    $borrado ='';/*'<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">
-                            <form class="form-inline" id="" action="/Administrar/EliminarComentario'.$comentario["idComentario"].'" method="POST" enctype="multipart/form-data">
-                            <h6>El comentario se eliminara permanentemente, esta seguro de borrarlo? &nbsp; </h6>     
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="si" name="confirmado" class="custom-control-input">    
-                                <label class="custom-control-label" for="si">Si</label>                            
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="no" name="confirmado" class="custom-control-input">
-                                <label class="custom-control-label" for="no">No</label>
-                            </div>
-                            <button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">OK</button>
-                                <div class="form-group mx-sm-3 mb-2 py-0 my-0" id="" >
-                                    <input type="password" class="form-control py-0 my-0" name="unaPassword1" placeholder="password de Admin" style="font-size: 1.6ex;"required>
-                                </div>
-                            </form>
-                           </div>';  */                  
-                }else{
-                    $borrado ='
-                            <div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">
-                                <form class="form-inline formuBorrar" id="" action="" method="POST" enctype="multipart/form-data">
-                                    <button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">borrar comentario</button>
-                                    <input type="hidden" id="idDeComent" name="idComentario" value="'.$comentario["idComentario"].'">
-                                </form>
-                            </div>';                  
-                }
-            }else{ 
-                $borrado='';
-            }
+            $face = (($usuario["redSocial1"]==NULL)||(empty($usuario["redSocial1"])))? ''
+                :'<div class=""><a href="'.$usuario["redSocial1"].'"> <img src="/Vistas/imagenes/face.png" class="icono3" ></a></div>';
+            $redSoc2 = (($usuario["redSocial2"]==NULL)||(empty($usuario["redSocial2"])))? ''
+                :'<div clas=""><a href="'.$usuario["redSocial2"].'"> <img src="/Vistas/imagenes/redSocial2.png" class="icono3"></a></div>';
+            ($this->getUsuario()->getRol()=='ADMI')?
+                // Solo mostrar la opcion de borrar el comentario (el borrado efectivo se hace en ControladorAdministrar->metodoEliminarComentario)
+                $borrado = $this->getVista()->crearMenuBorrarMsj2($comentario["idComentario"],$idTema,$pagina)                 
+                :$borrado='';
             /*/Seccion/irTema/'.$idTema.'/'.$pagina.'*/
-            $listaComents .= '<div class="media">
-                                <div class="media-left">
-                                    <h3 class="media-heading">'.htmlentities($usuario["apodo"]).' </h3>
-                                    <img src="/Vistas/imagenesUsers/'.$usuario["dirImg"].'" class="icono2 media-object" >
-                                    '.$face.$redSoc2.'
-                                </div>
-                                <div class="media-body "><h6 class="text-right"> '.$dia.'/'.$mes.'/'.$vecFecha[year].
-                                '<br/>'.$hora.':'.$min.'</h6>
-                                <div class="contenedor1">                                
-                                  <div class="comentario1">'.$comentario["contenido"].'
-                                  </div>
-                                </div>'.$borrado.'         
-                               </div>
-                              </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
+            $listaComents .= $this->getVista()->crearListaComentarios($usuario["apodo"],$usuario["dirImg"],$face,$redSoc2,$vecFecha,$comentario["contenido"],$borrado);            
         }       
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/temas.js');
         $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
@@ -523,7 +451,6 @@ class ControladorSeccion extends ControladorPorDefecto{
             $pag = intval(($num/10))+1;
         }
         header('Location:http://'.DOMINIO.'/Seccion/Curso/'.$idCurso.'/'.$pag);
-    }
-    
+    }    
 }
 ?>

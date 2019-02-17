@@ -209,13 +209,15 @@ class ControladorAdministrar extends ControladorPorDefecto
         return $this->getVista();
     }
     
-    public function metodoEliminarComentario($idComen){
-        if(!$this->chequearPass()) return $this->msjAtencion("error en la contraseña ingresada");
-        if (!is_int($idComen)) {
-            return $this->msjAtencion('error en el id del apunte ingresado');
+    public function metodoEliminarComentario($idComent,$idTema,$pag){
+        if(!$this->chequearPass())  return $this->msjAtencion("error en la contraseña ingresada");
+        if (!is_numeric($idComent))     return $this->msjAtencion('error en el id del apunte ingresado');
+        if($this->getUsuario()->getRol()=='ADMI'){
+            if($_POST['confirmado']=='si'){
+                Modelo::eliminarComentario($idComent);
+            }
         }
-        Modelo::eliminarComentario($idComen);
-        /*TODO*/
+        header('Location:http://'.DOMINIO.'/Seccion/irTema/'.$idTema.'/'.$pag);
     }
 
     public function setearFormuListarUsers() {
