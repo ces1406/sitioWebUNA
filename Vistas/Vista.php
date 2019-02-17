@@ -85,7 +85,78 @@ class Vista{
         $this->pagina = str_replace($clave,$valor, $this->pagina);
     }
 
+    public function listaCursosBuscados($vecCursos){
+        if(!empty($vecCursos)){
+            $busqueda .='<ul class="navbar-nav " id="listaCursos"><h3>Resultados</h3>';
+            foreach ($vecCursos as $curso) {
+                $busqueda .='<a href="/Seccion/Curso/'.$curso['idCurso'].'/1" class="enlace">
+                <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">Materia: '.$curso['nombreMateria'].'</h5><small>Horario: '
+                .$curso['horario'].'</small></div><p class="mb-1">Catedra: '.$curso['nombreCatedra'].'<br/>Sede: '.$curso['sede']
+                .'<br/>Código de curso:<small> '.$curso['codigo'].'</small></p> </a>
+                <img class="card-img-top " src="/Vistas/imagenes/item12.png" height="10" alt="Card image cap">';
+            }
+            $busqueda .= '</ul> <a class="btn btn-sm enlace" href="/Seccion/CursosCatedras/default">Limpiar busqueda</a>';
+        }else{
+            $busqueda .='<h3>No se encontraron resultados para '.$materia.'&#8226;'.$catedra.'&#8226;'.$codigo.'&#8226;'.$horario.'&#8226;'.$sede.'</h3>
+            <a class="btn btn-sm enlace" href="/Seccion/CursosCatedras/default">Limpiar busqueda</a>';
+        }
+        return $busqueda;
+    }
+
+    public function crearListaOpinionesDeCurso($lista,$materia,$catedra){
+        $msj = 'Ya existen foros de opiniones sobre<br/>Materia: '.$materia.'&nbsp;Catedra: '.$catedra;
+        $msj .= '<br/><p>fijarse si los nombres de catedras son muy similares</p>';
+        $msj .='<img class="card-img-top " src="/Vistas/imagenes/item12.png" height="10" alt="Card image cap">
+                <div id="" class="list-group">';
+        $msj .= $this->listaDeOpinionesCurso($lista);
+        $msj .= '</div>';
+        return $msj;
+    }
+    public function crearListaOpinionesDeCurso2($lista,$materia,$catedra){
+        if(!empty($lista)){
+            $listaHtml ='<ul class="navbar-nav " id="listaOpiniones"><h3>Resultados:</h3>';
+            $listaHtml .= $this->listaDeOpinionesCurso($lista);
+            $listaHtml .= '</ul><a class="btn btn-sm enlace" href="/Seccion/irOpiniones/default/1">Limpiar busqueda</a>';
+        }else{
+            $listaHtml ='<h3>No se encontraron resultados para '.$materia.'&#8226;'.$catedra.'&#8226;'.$profesor.'</h3>
+                        <a class="btn btn-sm enlace" href="/Seccion/irOpiniones/default/1">Limpiar busqueda</a>';
+        }
+        return $listaHtml;
+    }
+    public function crearListaOpinionesDeCurso3($listaOp){
+        if(!empty($listaOp)){
+            $opiniones='<div id="ultimosComentarios" class="list-group">';
+            foreach ($listaOp as $opinion) {
+                $opiniones .= ' <a  class="enlace" href="/Seccion/irHiloOpinion/'.$opinion['idCatedra'].'/1 ">
+                                <h5 class="esquinaIzq2">Materia:&nbsp '.$opinion['materia'].'</h5>
+                                <div class="contenido2">
+                                    catedra: '.$opinion['catedra'].'<br/>
+                                    profesores: '.$opinion['profesores'].'<br/>
+                                    <div class="px-2">comentario: '.$opinion['contenido'].'</div>
+                                </div>
+                                </a>
+                                <img class="card-img-top separador" src="/Vistas/imagenes/item12.png" height="35" alt="Card image cap">'; 
+            }
+            $opiniones .= '</div>';
+        }else{
+            $opiniones='';
+        }
+        return $opiniones;
+    }
+    
+    public function listaDeOpinionesCurso($lista){
+        foreach ($lista as $opinion) {
+            $msj .='<a href="/Seccion/IrHiloOpinion/'.$opinion['idCatedra'].'/1" class="enlace">
+                    <div class="d-flex w-100 justify-content-between"><h4 class="mb-1">Materia: '.$opinion['materia'].'</h4></div><p class="mb-1">
+                    Catedra: '.$opinion['catedra'].'<br/>Profesores: '.$opinion['profesores'].'</p> </a>
+                    <img class="card-img-top " src="/Vistas/imagenes/item12.png" height="10" alt="Card image cap">';
+        }
+        return $msj;
+    }
+
     public function agregarHoraYMins(){
+        $hor=null;
+        $min=null;
         for ($i=7; $i <24 ; $i++) { $hor.='<option>'.str_pad((int)$i,2,"0",STR_PAD_LEFT).'</option>';}
         for ($i=0; $i <12 ; $i++) { $min .='<option>'.str_pad((int)($i*5),2,"0",STR_PAD_LEFT).'</option>';}
         $this->modificarCuerpo('{hora}',$hor);

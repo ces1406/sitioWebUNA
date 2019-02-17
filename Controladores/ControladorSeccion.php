@@ -129,26 +129,13 @@ class ControladorSeccion extends ControladorPorDefecto{
             if(strlen($catedra)>25 ||!is_string($catedra))                  return $this->msjAtencion('error en la catedra ingresada');
             if(strlen($codigo)>10||!is_string($codigo))                     return $this->msjAtencion('error en el codigo ingresado');
             if(strlen($materia)>TAM_MATERIA_MAX || !is_string($materia))    return $this->msjAtencion('error en la materia ingresada');
-            if(strlen($sede)>13||!is_string($sede))                         return $this->msjAtencion('error en el codigo ingresado');
+            if(strlen($sede)>13||!is_string($sede))                         return $this->msjAtencion('error en la sede ingresada');
             
             $horario = $_POST['horaInicio'].':'.$_POST['minInicio'].' a '.$_POST['horaFin'].':'.$_POST['minFin'];
             if($horario ==': a :') $horario=NULL;
             
             $vecCursos=Modelo::buscarCurso($materia,$catedra,$sede,$codigo,$horario);
-            if(!empty($vecCursos)){
-                $busqueda .='<ul class="navbar-nav " id="listaCursos"><h3>Resultados</h3>';
-                foreach ($vecCursos as $curso) {
-                    $busqueda .='<a href="/Seccion/Curso/'.$curso['idCurso'].'/1" class="enlace">
-                    <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">Materia: '.$curso['nombreMateria'].'</h5><small>Horario: '
-                    .$curso['horario'].'</small></div><p class="mb-1">Catedra: '.$curso['nombreCatedra'].'<br/>Sede: '.$curso['sede']
-                    .'<br/>Código de curso:<small> '.$curso['codigo'].'</small></p> </a>
-                    <img class="card-img-top " src="/Vistas/imagenes/item12.png" height="10" alt="Card image cap">';
-                }
-                $busqueda .= '</ul> <a class="btn btn-sm enlace" href="/Seccion/CursosCatedras/default">Limpiar busqueda</a>';
-            }else{
-                $busqueda .='<h3>No se encontraron resultados para '.$materia.'&#8226;'.$catedra.'&#8226;'.$codigo.'&#8226;'.$horario.'&#8226;'.$sede.'</h3>
-                <a class="btn btn-sm enlace" href="/Seccion/CursosCatedras/default">Limpiar busqueda</a>';
-            }
+            $busqueda=$this->getVista()->listaCursosBuscados($vecCursos);
             $sectorBusq ='';
         }elseif ($param=='default'){
             $sectorBusq = file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioBusquedaCurso');
@@ -167,7 +154,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         }else{
             $this->getVista()->modificarCuerpo('{cargaDeCurso}','');
         }
-        
+
         $this->getVista()->agregarHoraYMins();          
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/cursos.js');
         $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
@@ -186,28 +173,13 @@ class ControladorSeccion extends ControladorPorDefecto{
             $catedra=trim($_POST['unaCatedra']);
             $materia=trim($_POST['unaMateria']);
             $profesor=trim($_POST['unProfesor']);
-            if(empty($catedra)||strlen($catedra)>60 ||!is_string($catedra)){
-                return $this->msjAtencion('error en la catedra ingresada');
-            }
-            if(empty($materia)||strlen($materia)>TAM_MATERIA_MAX||!is_string($materia)){
-                return $this->msjAtencion('error en la materia ingresada');
-            }
-            if(empty($profesor)>90||!is_string($profesor)){
-                return $this->msjAtencion('error en el profesor ingresado');
-            }
+            if(empty($catedra)||strlen($catedra)>60 ||!is_string($catedra))             return $this->msjAtencion('error en la catedra ingresada');
+            if(empty($materia)||strlen($materia)>TAM_MATERIA_MAX||!is_string($materia)) return $this->msjAtencion('error en la materia ingresada');
+            if(empty($profesor)>90||!is_string($profesor))                              return $this->msjAtencion('error en el profesor ingresado');
+            // Armando la vista html a devolver
             $listaOpiniones=Modelo::buscarCatedra($materia,$catedra);
             if(count($listaOpiniones)!=0){
-                $msj = 'Ya existen foros de opiniones sobre<br/>Materia: '.$materia.'&nbsp;Catedra: '.$catedra;
-                $msj .= '<br/><p>fijarse si los nombres de catedras son muy similares</p>';
-                $msj .='<img class="card-img-top " src="/Vistas/imagenes/item12.png" height="10" alt="Card image cap">
-                        <div id="" class="list-group">';
-                foreach ($listaOpiniones as $opinion) {
-                    $msj .='<a href="/Seccion/IrHiloOpinion/'.$opinion['idCatedra'].'/1" class="enlace">
-                    <div class="d-flex w-100 justify-content-between"><h4 class="mb-1">Materia: '.$opinion['materia'].'</h4></div><p class="mb-1">
-                        Catedra: '.$opinion['catedra'].'<br/>Profesores: '.$opinion['profesores'].'</p> </a>
-                        <img class="card-img-top " src="/Vistas/imagenes/item12.png" height="10" alt="Card image cap">';
-                }
-                $msj .= '</div>';
+                $msj = $this->getVista()->crearListaOpinionesDeCurso($listaOpiniones,$materia,$catedra);
                 return $this->msjAtencion($msj);
             }
             Modelo::cargarOpinionCatedra($materia,$catedra,$profesor);
@@ -218,72 +190,23 @@ class ControladorSeccion extends ControladorPorDefecto{
             $catedra=trim($_POST['unaCatedra']);
             $materia=trim($_POST['unaMateria']);
             $profesor=trim($_POST['unProfesor']);
-            if(strlen($catedra)>60 ||!is_string($catedra)){
-                return $this->msjAtencion('error en la catedra ingresada');
-            }
-            if(strlen($materia)>TAM_MATERIA_MAX||!is_string($materia)){
-                return $this->msjAtencion('error en la materia ingresada');
-            }
-            if(strlen($profesor)>90||!is_string($profesor)){
-                return $this->msjAtencion('error en el profesor ingresado');
-            }
+            if(strlen($catedra)>60 ||!is_string($catedra))              return $this->msjAtencion('error en la catedra ingresada');
+            if(strlen($materia)>TAM_MATERIA_MAX||!is_string($materia))  return $this->msjAtencion('error en la materia ingresada');
+            if(strlen($profesor)>90||!is_string($profesor))             return $this->msjAtencion('error en el profesor ingresado');
+            // Armando la vista html a devolver
             $listaOpiniones=Modelo::buscarOpinionesCatedra($materia,$catedra,$profesor);
-            if(!empty($listaOpiniones)){
-                $busqueda .='<ul class="navbar-nav " id="listaOpiniones"><h3>Resultados:</h3>';
-                foreach ($listaOpiniones as $opinion) {
-                    $busqueda .='<a href="/Seccion/IrHiloOpinion/'.$opinion['idCatedra'].'/1" class="enlace">
-                    <div class="d-flex w-100 justify-content-between"><h4 class="mb-1">Materia: '.$opinion['materia'].'</h4></div><p class="mb-1">
-                        Catedra: '.$opinion['catedra'].'<br/>Profesores: '.$opinion['profesores'].'</p> </a>
-                        <img class="card-img-top " src="/Vistas/imagenes/item12.png" height="10" alt="Card image cap">';
-                }
-                $busqueda .= '</ul><a class="btn btn-sm enlace" href="/Seccion/irOpiniones/default/1">Limpiar busqueda</a>';
-            }else{
-                $busqueda .='<h3>No se encontraron resultados para '.$materia.'&#8226;'.$catedra.'&#8226;'.$profesor.'</h3>
-                            <a class="btn btn-sm enlace" href="/Seccion/irOpiniones/default/1">Limpiar busqueda</a>';
-            }
+            $busqueda =  $this->getUsuario()->crearListaOpinionesDeCurso2($listaOpiniones,$materia,$catedra);
             $listaOpiniones=Modelo::ultimasOpiniones();
             rsort($listaOpiniones);
-            //echo nl2br("\ncursos1: vecCursos.length()=".count($vecCursos));
-            if(!empty($listaOpiniones)){
-                $opiniones='<div id="ultimosComentarios" class="list-group">';
-                foreach ($listaOpiniones as $opinion) {
-                    //echo nl2br('\nidCurso='.$curso['idCurso']." materia=".$curso['nombreMateria']);
-                    $opiniones .= '<a  class="enlace" href="/Seccion/irHiloOpinion/'.$opinion['idCatedra'].'/1 ">
-                    <h5 class="esquinaIzq2">Materia:&nbsp '.$opinion['materia'].'</h5>
-                    <div class="contenido2">
-                        catedra: '.$opinion['catedra'].'<br/>
-                        profesores: '.$opinion['profesores'].'<br/>
-                        <div class="px-2">comentario: '.$opinion['contenido'].'</div>
-                    </div>
-                    </a>
-                   <img class="card-img-top separador" src="/Vistas/imagenes/item12.png" height="35" alt="Card image cap">'; 
-                }
-                $opiniones .= '</div>';
-            }
+            $opiniones = $this->getVista()->crearListaOpinionesDeCurso3($listaOpiniones);
             $sectorBusq ='';
         }
-        elseif($param=='default'){
+        elseif($param=='default'){       // Armando la vista html a devolver
            $listaOpiniones=Modelo::ultimasOpiniones();
            rsort($listaOpiniones);
-            //echo nl2br("\ncursos1: vecCursos.length()=".count($vecCursos));
-            if(!empty($listaOpiniones)){
-                $opiniones='<div id="ultimosComentarios" class="list-group">';
-                foreach ($listaOpiniones as $opinion) {
-                    //echo nl2br('\nidCurso='.$curso['idCurso']." materia=".$curso['nombreMateria']);
-                    $opiniones .= '<a  class="enlace" href="/Seccion/irHiloOpinion/'.$opinion['idCatedra'].'/1 ">
-                                    <h5 class="esquinaIzq2">Materia:&nbsp '.$opinion['materia'].'</h5>
-                                    <div class="contenido2">
-                                        catedra: '.$opinion['catedra'].'<br/>
-                                        profesores: '.$opinion['profesores'].'<br/>
-                                        <div class="px-2">comentario: '.$opinion['contenido'].'</div>
-                                    </div>
-                                    </a>
-                                   <img class="card-img-top separador" src="/Vistas/imagenes/item12.png" height="35" alt="Card image cap">';                
-                }
-                $opiniones .= '</div>';
-            }
-            $sectorBusq = file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioBusquedaOpinion');
-        }else{
+           $opiniones = $this->getVista()->crearListaOpinionesDeCurso3($listaOpiniones);
+           $sectorBusq = file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioBusquedaOpinion');
+        }else{                          // Armando la vista html a devolver
             return $this->msjAtencion('pagina inexistente en el sitio');
         }
         
@@ -297,11 +220,9 @@ class ControladorSeccion extends ControladorPorDefecto{
         $this->getVista()->modificarCuerpo('{panelDer}',$opiniones);
         $this->getVista()->modificarCuerpo('{resultadoBusqueda}',$busqueda);
         $this->getVista()->modificarCuerpo('{buscadorOpiniones}',$sectorBusq);
-        if(isset($_SESSION['idUsuario'])){
-            $this->getVista()->modificarCuerpo('{crearHiloDeOpinion}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioCrearHiloOpinion'));
-        }else{
-            $this->getVista()->modificarCuerpo('{crearHiloDeOpinion}','');
-        }
+        (isset($_SESSION['idUsuario']))?
+            $this->getVista()->modificarCuerpo('{crearHiloDeOpinion}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioCrearHiloOpinion'))
+            :$this->getVista()->modificarCuerpo('{crearHiloDeOpinion}','');
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/opiniones.js');
         $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
         $mat = new ListaMaterias();
