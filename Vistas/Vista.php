@@ -62,7 +62,7 @@ class Vista{
         return '
             <div class="media">
                 <div class="media-left">
-                    <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="mr-3 comentarista media-object" >
+                    <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="mr-3 icono2 media-object" >
                 </div>
                 <div class="media-body">
                     <form class="form-horizontal" id="crearComentario" {action} method="POST">
@@ -196,7 +196,7 @@ class Vista{
     }
 
     public function crearMenuBorrarApunte($idApunte){
-        return '<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">
+        return '<div class="badge badge-primary text-wrap" style="background-color: rgba(21, 24, 29, 0.9);">
                     <form class="form-inline formuBorrar" id="" action="" method="POST" enctype="multipart/form-data">
                         <button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">eliminar apunte</button>
                         <input type="hidden" id="idDeApunte" name="idApunte" value="'.$idApunte.'" >
@@ -217,7 +217,7 @@ class Vista{
     }
 
     public function crearMenuBorrarMsj($idComentario,$idTema,$pagina){
-        return '<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">
+        return '<div class="badge badge-primary text-wrap float-right" style="background-color: rgba(21, 24, 29, 0.9);">
                     <form class="form-inline formuBorrar" id="" action="" method="POST" enctype="multipart/form-data">
                         <button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">borrar comentario</button>
                         <input type="hidden" id="idDeComent" name="idComentario" value="'.$idComentario.'">
@@ -238,8 +238,8 @@ class Vista{
                     <div class="media-body "><h6 class="text-right"> '.$fecha[dia].'/'.$fecha[mes].'/'.$fecha[anio].'<br/>'.$fecha[hora].':'.$fecha[minutos].'</h6>
                         <div class="contenedor1">                                
                             <div class="comentario1">'.$contenido.'
-                            </div>
-                        </div>'.$borrado.'         
+                            </div>'.$borrado.' 
+                        </div>        
                     </div>
                 </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
     }

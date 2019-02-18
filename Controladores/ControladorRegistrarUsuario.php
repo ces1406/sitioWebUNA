@@ -151,9 +151,7 @@ class ControladorRegistrarUsuario extends ControladorPorDefecto{
                             btn-primary bg-dark">Cambiar contraseña</a></li>';
         $menuPassMail0 .='<li class="list-group-item bg-dark"><a href="/RegistrarUsuario/ConfigPerfil/face" class="btn btn-primary bg-dark">
                             Cambiar Facebook</a></li><li class="list-group-item bg-dark"><a href="/RegistrarUsuario/ConfigPerfil/redSoc1" 
-                            class="btn btn-primary bg-dark">Cambiar pagina personal</a></li>';                 
-        
-        $this->getVista()->modificarCuerpo('Iniciar Sesión en WebUNA','Configuracion de perfil');
+                            class="btn btn-primary bg-dark">Cambiar pagina personal</a></li>';       
         
         if ($param == 'img') {
             $submenuCambiarImg=file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioCambiarImg');

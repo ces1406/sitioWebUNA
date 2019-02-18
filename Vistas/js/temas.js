@@ -1,9 +1,10 @@
 var main=function(){
 	ponerFecha();
+	borrado()
 	redimensionarImgsComentInicial();
 	ajustarComentarios();
 	redimensionarImgsComentsOdinarios();
-	borrado()
+	
 };
 function borrado(){
 	console.log('en borrado');
@@ -103,15 +104,18 @@ function redimensionarImgsComentInicial(){
 	}
 }	
 function ajustarComentarios(){
+	console.log('****ajustandoComentarios******');
 	var anchor = document.getElementById('comentarioInicial').clientWidth;
 	var coments = document.getElementsByClassName('comentario1');
 	var contenedores = document.getElementsByClassName('contenedor1');
 	for (let i = 0; i < coments.length; i++) {
 		var element = coments[i];
+		console.log('comentatios1  nro.: '+i+' innerHTML'+element.innerHTML);
 		element.style.cssText = 'max-width: '+(85*anchor/100)+'px !important;'; //el 85% del anchor		
 	}
 	for (let i = 0; i < contenedores.length; i++) {
 		var element = contenedores[i];
+		console.log('contenedores1 nro.: '+i+' innerHTML'+element.innerHTML);
 		element.style.cssText = 'min-width: '+(85*anchor/100)+'px !important;'; //el 85% del anchor		
 	}
 }

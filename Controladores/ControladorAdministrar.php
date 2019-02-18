@@ -200,15 +200,7 @@ class ControladorAdministrar extends ControladorPorDefecto
                 Modelo::eliminarApunte($idApunte);
             }
         }
-        header('Location:http://'.DOMINIO.'/Seccion/irAApuntes/default/0/Apuntes/10/1');        
-        /*$this->getVista()->armarHtml();
-        $this->getVista()->modificarCuerpo('{sectorIzquierda}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/cuerpoAdmin'));
-        $this->getVista()->modificarCuerpo('{sectorDerecha}','');
-        $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/admin.js');
-        $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
-        $this->setearFormuListarTemas();
-        $this->setearFormuListarUsers();        
-        return $this->getVista();*/
+        header('Location:http://'.DOMINIO.'/Seccion/irAApuntes/default/0/Apuntes/10/1');  
     }
     
     public function metodoEliminarComentario($idComent,$idTema,$pag){
