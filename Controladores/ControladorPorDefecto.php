@@ -3,8 +3,8 @@ require_once DIR_RAIZ.DIR_APP.'/Modelo.php';
 require_once DIR_RAIZ.DIR_VISTA.'/Vista.php';
 require_once DIR_RAIZ.DIR_APP.'/Usuario.php';
     
-class ControladorPorDefecto 
-{
+class ControladorPorDefecto {
+
     private $vista;
     private $usuario;
     
@@ -38,32 +38,7 @@ class ControladorPorDefecto
         $this->getVista()->modificarCuerpo('{sectorIzquierda}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/sectorIzquierdo'));
         $listaSecciones=null;
         $secciones=Modelo::buscarSecciones();
-        foreach ($secciones as $seccion){
-            if($seccion['nombreSeccion']=='Apuntes'){
-                $metodo= 'IrAApuntes/default/0';
-                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
-                $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo.'/'.$seccion["nombreSeccion"];
-                $listaSecciones .= '/'.$seccion["idSeccion"].'/1">'. $seccion["nombreSeccion"].'<br/><h6>';
-                $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
-            }elseif($seccion['nombreSeccion']=='Cursos por cátedras'){
-                $metodo= 'CursosCatedras/default';
-                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
-                $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo.'">'. $seccion["nombreSeccion"].'<br/><h6>';
-                $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
-            }elseif($seccion['nombreSeccion']=='Opiniones de cátedras y profesores'){
-                $metodo= 'IrOpiniones/default';
-                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
-                $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo;
-                $listaSecciones .= '/1">'. $seccion["nombreSeccion"].'<br/><h6>';
-                $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
-            }else{
-                $metodo='IrSeccion';
-                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
-                $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo.'/'.$seccion["nombreSeccion"];
-                $listaSecciones .= '/'.$seccion["idSeccion"].'/1">'. $seccion["nombreSeccion"].'<br/><h6>';
-                $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
-            }
-        }
+        $listaSecciones = $this->getVista()->crearListaDeSecciones($secciones);
         $this->getVista()->modificarCuerpo('{colIzq}','7');
         $this->getVista()->modificarCuerpo('{panelIzq}','<ul class="navbar-nav " id="listaSecciones">{secciones}</ul>');
         $this->getVista()->modificarCuerpo('{secciones}',$listaSecciones);

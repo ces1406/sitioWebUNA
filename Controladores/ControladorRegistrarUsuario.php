@@ -53,7 +53,7 @@ class ControladorRegistrarUsuario extends ControladorPorDefecto{
         $msj='<h2>Ya enviamos un correo a la direccion de mail que indicaste con la contraseña para tu usuario<br/></h2>';
         $this->getVista()->modificarCuerpo('Registrandose en WebUNA','Recuperando la contraseña en WebUNA');
         $this->getVista()->modificarCuerpo('{panelIzq}',$msj);
-        $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/iniciarSesion.css');
+        $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/registrarse.js');
         return $this->getVista();
     }
@@ -85,9 +85,10 @@ class ControladorRegistrarUsuario extends ControladorPorDefecto{
         $mailUser=NULL;
         $mailUser=Modelo::buscarMail($mail);
         if( ($mailUser!=NULL)||!(empty($mailUser))){
-           return $this->msjAtencion('error, el mail que indicaste ya existe');
+           return $this->msjAtencion('error, el mail que indicaste ya existe (si olvidaste tu password ir a "iniciar sesion"
+                                        y clickear en "olvide mi contraseña")');
         }elseif (Modelo::buscarUsuarioPorApodo($apodo)!=NULL){
-           return $this->msjAtencion('error, ya existe un usuario con ese apodo');
+           return $this->msjAtencion('error, ya existe un usuario con ese apodo intenta con otro');
         }
         // Generando un token para enviarlo por mail y luego validarlo en $this->metodoConfirmacion()
         $token=uniqid(rand(),true);
@@ -104,16 +105,16 @@ class ControladorRegistrarUsuario extends ControladorPorDefecto{
         }
        
         // Enviando mail
-        $mensaje="Bienvenida/o ".$apodo." a mundoUnaWeb, te enviamos este mail para confirmar tu registro al sitio, ahora necesitas";
-        $mensaje .= " ir al siguiente enlace y confirmar tu registracion: ".DOMINIO."/RegistrarUsuario/Confirmacion/";
+        $mensaje="Bienvenida/o ".$apodo." a ".NOMBRE_SITIO.", te enviamos este mail para confirmar tu registro al sitio, ahora como ultimo";
+        $mensaje .= "paso necesitas ir al siguiente enlace para confirmar tu registracion: ".DOMINIO."/RegistrarUsuario/Confirmacion/";
         $mensaje .= $vecUser['idUsuario'].'/'.$token;
         if (($resultado=$this->enviarMail($mensaje,$vecUser['mail'],$apodo))!='OK') {
             return $this->msjAtencion($resultado);
         }
-        $msj='<h2>BienVenida/o a unaWeb!<br/>Enviamos un correo a la direccion de mail que indicaste para que
+        $msj='<h2>BienVenida/o a '.NOMBRE_SITIO.'!<br/>Enviamos un correo a la direccion de mail que indicaste para que
             lo confirmes y termines de registrarte en forma definitiva.<br/>'.$msjErr.'</h2>';
         $this->getVista()->modificarCuerpo('{panelIzq}',$msj);        
-        $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/iniciarSesion.css');
+        $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/registrarse.js');
         return $this->getVista();
     }
@@ -122,10 +123,10 @@ class ControladorRegistrarUsuario extends ControladorPorDefecto{
         $vecUser=Modelo::buscarUsuario($idUsuario);
         if($unToken==$vecUser['token']){
             Modelo::actualizarEstadoCuenta($idUsuario);
-            $msj='<h2>BienVenida/o a unaWeb!<br/>Ahora estas habilitado definitivamente y puedes participar activamente en los
+            $msj='<h2>BienVenida/o a'.NOMBRE_SITIO.'!<br/>Ahora estas habilitado definitivamente y puedes participar activamente en los
                     diferentes foros con tu sesion de usuario.</h2>';
             $this->getVista()->modificarCuerpo('{panelIzq}',$msj);
-            $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/iniciarSesion.css');
+            $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
             $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/registrarse.js');
             return $this->getVista();
         }else{

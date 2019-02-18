@@ -106,10 +106,10 @@ class ControladorSeccion extends ControladorPorDefecto{
             $materia=trim($_POST['unaMateria']);
             $sede=trim($_POST['unaSede']);
 
-            if(empty($catedra)||strlen($catedra)>25 ||!is_string($catedra))             return $this->msjAtencion('error en la catedra ingresada');
-            if(strlen($codigo)>10||!is_string($codigo))                                 return $this->msjAtencion('error en el codigo ingresado');
+            if(empty($catedra)||strlen($catedra)>TAM_CATEDRA_MAX ||!is_string($catedra))return $this->msjAtencion('error en la catedra ingresada');
+            if(strlen($codigo)>TAM_MAX_CODCURSO||!is_string($codigo))                   return $this->msjAtencion('error en el codigo ingresado');
             if(empty($materia)||strlen($materia)>TAM_MATERIA_MAX||!is_string($materia)) return $this->msjAtencion('error en la materia ingresada');
-            if(empty($sede)||strlen($sede)>13||!is_string($sede))                       return $this->msjAtencion('error en la sede ingresada');
+            if(empty($sede)||strlen($sede)>TAM_SEDE_MAX||!is_string($sede))             return $this->msjAtencion('error en la sede ingresada');
           
             $horario = $_POST['horaInicio'].':'.$_POST['minInicio'].' a '.$_POST['horaFin'].':'.$_POST['minFin'];
             $cursoRepe=Modelo::buscarCursoRepe($materia,$catedra,$sede,$codigo,$horario);
@@ -126,10 +126,10 @@ class ControladorSeccion extends ControladorPorDefecto{
             $codigo=trim($_POST['unCodigo']);
             $materia=trim($_POST['unaMateria']);
             $sede=trim($_POST['unaSede']);
-            if(strlen($catedra)>25 ||!is_string($catedra))                  return $this->msjAtencion('error en la catedra ingresada');
-            if(strlen($codigo)>10||!is_string($codigo))                     return $this->msjAtencion('error en el codigo ingresado');
+            if(strlen($catedra)>TAM_CATEDRA_MAX ||!is_string($catedra))     return $this->msjAtencion('error en la catedra ingresada');
+            if(strlen($codigo)>TAM_MAX_CODCURSO||!is_string($codigo))       return $this->msjAtencion('error en el codigo ingresado');
             if(strlen($materia)>TAM_MATERIA_MAX || !is_string($materia))    return $this->msjAtencion('error en la materia ingresada');
-            if(strlen($sede)>13||!is_string($sede))                         return $this->msjAtencion('error en la sede ingresada');
+            if(strlen($sede)>TAM_SEDE_MAX||!is_string($sede))               return $this->msjAtencion('error en la sede ingresada');
             
             $horario = $_POST['horaInicio'].':'.$_POST['minInicio'].' a '.$_POST['horaFin'].':'.$_POST['minFin'];
             if($horario ==': a :') $horario=NULL;
@@ -149,12 +149,9 @@ class ControladorSeccion extends ControladorPorDefecto{
         $this->getVista()->modificarCuerpo('{colIzq}','12');
         $this->getVista()->modificarCuerpo('{resultadoBusqueda}',$busqueda);
         $this->getVista()->modificarCuerpo('{buscadorCursos}',$sectorBusq);
-        if(isset($_SESSION['idUsuario'])){                      
-            $this->getVista()->modificarCuerpo('{cargaDeCurso}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioCargarCurso'));            
-        }else{
-            $this->getVista()->modificarCuerpo('{cargaDeCurso}','');
-        }
-
+        (isset($_SESSION['idUsuario']))?                      
+            $this->getVista()->modificarCuerpo('{cargaDeCurso}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/formularioCargarCurso'))
+            :$this->getVista()->modificarCuerpo('{cargaDeCurso}','');
         $this->getVista()->agregarHoraYMins();          
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/cursos.js');
         $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
@@ -174,9 +171,9 @@ class ControladorSeccion extends ControladorPorDefecto{
             $catedra=trim($_POST['unaCatedra']);
             $materia=trim($_POST['unaMateria']);
             $profesor=trim($_POST['unProfesor']);
-            if(empty($catedra)||strlen($catedra)>60 ||!is_string($catedra))             return $this->msjAtencion('error en la catedra ingresada');
+            if(empty($catedra)||strlen($catedra)>TAM_CATEDRA_MAX ||!is_string($catedra))return $this->msjAtencion('error en la catedra ingresada');
             if(empty($materia)||strlen($materia)>TAM_MATERIA_MAX||!is_string($materia)) return $this->msjAtencion('error en la materia ingresada');
-            if(empty($profesor)>90||!is_string($profesor))                              return $this->msjAtencion('error en el profesor ingresado');
+            if(empty($profesor)||strlen($profesor)>TAM_PROF_MAX||!is_string($profesor)) return $this->msjAtencion('error en el profesor ingresado');
             // Armando la vista html a devolver
             $listaOpiniones=Modelo::buscarCatedra($materia,$catedra);
             if(count($listaOpiniones)!=0){
@@ -191,9 +188,9 @@ class ControladorSeccion extends ControladorPorDefecto{
             $catedra=trim($_POST['unaCatedra']);
             $materia=trim($_POST['unaMateria']);
             $profesor=trim($_POST['unProfesor']);
-            if(strlen($catedra)>60 ||!is_string($catedra))              return $this->msjAtencion('error en la catedra ingresada');
+            if(strlen($catedra)>TAM_CATEDRA_MAX ||!is_string($catedra)) return $this->msjAtencion('error en la catedra ingresada');
             if(strlen($materia)>TAM_MATERIA_MAX||!is_string($materia))  return $this->msjAtencion('error en la materia ingresada');
-            if(strlen($profesor)>90||!is_string($profesor))             return $this->msjAtencion('error en el profesor ingresado');
+            if(strlen($profesor)>TAM_PROF_MAX||!is_string($profesor))   return $this->msjAtencion('error en el profesor ingresado');
             // Armando la vista html a devolver
             $listaOpiniones=Modelo::buscarOpinionesCatedra($materia,$catedra,$profesor);
             $busqueda =  $this->getVista()->crearListaOpinionesDeCurso2($listaOpiniones,$materia,$catedra);
@@ -246,7 +243,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         $listaComents=null;
         $vecComents=array_slice($vecComentarios, ($pagina-1)*CANT_COMENTS,CANT_COMENTS,true);
         
-        if ($this->getUsuario()->tieneSesion()&&($pagina-1==intdiv($cantComents-1,10))) {
+        if ($this->getUsuario()->tieneSesion()&&($pagina-1==intdiv($cantComents-1,CANT_COMENTS))) {
             $subMenuSesion=$this->getVista()->crearAreaComentaje($_SESSION["img"]);
             $this->getVista()->modificarCuerpo('{action}','action="/Seccion/ComentarCatedra/'.$idCatedra.'"');
         }else{
@@ -289,9 +286,9 @@ class ControladorSeccion extends ControladorPorDefecto{
             $titulo=trim($_POST['unTitulo']);
             $autor=trim($_POST['unAutor']);
             $materia=trim($_POST['unaMateria']);
-            if(empty($titulo)||strlen($titulo)>TAM_TITULO_MAX||!is_string($titulo))return $this->msjAtencion('error en el titulo ingresado');
-            if(empty($autor)||strlen($autor)>TAM_AUTOR_MAX||!is_string($autor)) return $this->msjAtencion('error en el autor ingresado');
-            if(empty($materia)||strlen($materia)>TAM_MATERIA_MAX||!is_string($materia))return $this->msjAtencion('error en la materia ingresada');
+            if(empty($titulo)||strlen($titulo)>TAM_TITULO_MAX||!is_string($titulo))     return $this->msjAtencion('error en el titulo ingresado');
+            if(empty($autor)||strlen($autor)>TAM_AUTOR_MAX||!is_string($autor))         return $this->msjAtencion('error en el autor ingresado');
+            if(empty($materia)||strlen($materia)>TAM_MATERIA_MAX||!is_string($materia)) return $this->msjAtencion('error en la materia ingresada');
             
             $enlace=trim($_POST['unaUbicacionUrl']);
             if(empty($enlace)) return $this->msjAtencion('no indicaste un link al apunte correcto');
@@ -374,13 +371,10 @@ class ControladorSeccion extends ControladorPorDefecto{
         $this->getVista()->modificarCuerpo('{redesSociales}',$face.$redSoc2);
         $this->getVista()->modificarCuerpo('{autor}',htmlentities($usuario["apodo"]));
         $this->getVista()->modificarCuerpo('{comentario}',$tema->getComentarioInicial());
-        $vecFecha=date_parse($tema->getFecha());
-        $hora=str_pad((int) $vecFecha[hour],2,"0",STR_PAD_LEFT);
-        $min=str_pad((int) $vecFecha[minute],2,"0",STR_PAD_LEFT);
-        $mes=str_pad((int) $vecFecha[month],2,"0",STR_PAD_LEFT);
-        $dia=str_pad((int) $vecFecha[day],2,"0",STR_PAD_LEFT);
 
-        $fechaString='<br/>'.$dia.'/'.$mes.'/'.$vecFecha[year].'<br/>'.$hora.':'.$min;
+        $vecDate=$this->getVista()->normalizarDate(date_parse($tema->getFecha()));
+        $fechaString='<br/>'.$vecDate[dia].'/'.$vecDate[mes].'/'.$vecDate[anio].'<br/>'.$vecDate[hora].':'.$vecDate[minutos];
+        
         $this->getVista()->modificarCuerpo('{fecha}',$fechaString);
         $this->getVista()->modificarCuerpo('{dirImg}',$usuario['dirImg']);
         
@@ -429,10 +423,10 @@ class ControladorSeccion extends ControladorPorDefecto{
         $vec = Modelo::cantComentsDeTema($idTema);
         $num = $vec['COUNT(*)'];
         $pag=0;
-        if(($num%10)==0){
-            $pag = $num/10;
+        if(($num%CANT_COMENTS)==0){
+            $pag = $num/CANT_COMENTS;
         }else{
-            $pag = intval(($num/10))+1;
+            $pag = intval(($num/CANT_COMENTS))+1;
         }
         header('Location:http://'.DOMINIO.'/Seccion/irTema/'.$idTema.'/'.$pag);
     }
@@ -444,10 +438,10 @@ class ControladorSeccion extends ControladorPorDefecto{
         $vec = Modelo::cantComentsDeCurso($idCurso);
         $num = $vec['COUNT(*)'];
         $pag=0;
-        if(($num%10)==0){
-            $pag = $num/10;
+        if(($num%CANT_COMENTS)==0){
+            $pag = $num/CANT_COMENTS;
         }else{
-            $pag = intval(($num/10))+1;
+            $pag = intval(($num/CANT_COMENTS))+1;
         }
         header('Location:http://'.DOMINIO.'/Seccion/Curso/'.$idCurso.'/'.$pag);
     }    

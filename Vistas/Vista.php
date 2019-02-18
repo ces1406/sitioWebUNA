@@ -28,6 +28,36 @@ class Vista{
         $this->pagina = str_replace('{pie}', file_get_contents($this->pie), $this->pagina);
     }
 
+    public function crearListaDeSecciones($vecSecciones){
+        foreach ($vecSecciones as $seccion){
+            if($seccion['nombreSeccion']=='Apuntes'){
+                $metodo= 'IrAApuntes/default/0';
+                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
+                $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo.'/'.$seccion["nombreSeccion"];
+                $listaSecciones .= '/'.$seccion["idSeccion"].'/1">'. $seccion["nombreSeccion"].'<br/><h6>';
+                $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
+            }elseif($seccion['nombreSeccion']=='Cursos por cátedras'){
+                $metodo= 'CursosCatedras/default';
+                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
+                $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo.'">'. $seccion["nombreSeccion"].'<br/><h6>';
+                $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
+            }elseif($seccion['nombreSeccion']=='Opiniones de cátedras y profesores'){
+                $metodo= 'IrOpiniones/default';
+                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
+                $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo;
+                $listaSecciones .= '/1">'. $seccion["nombreSeccion"].'<br/><h6>';
+                $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
+            }else{
+                $metodo='IrSeccion';
+                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
+                $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo.'/'.$seccion["nombreSeccion"];
+                $listaSecciones .= '/'.$seccion["idSeccion"].'/1">'. $seccion["nombreSeccion"].'<br/><h6>';
+                $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
+            }
+        }
+        return $listaSecciones;
+    }
+
     public function crearAreaComentaje($dirImg){
         return '
             <div class="media">
@@ -198,24 +228,33 @@ class Vista{
     }
 
     public function crearListaComentarios($apodo,$dirImg,$face,$redSoc2,$vecFecha,$contenido,$borrado){
-        $hora=str_pad((int) $vecFecha[hour],2,"0",STR_PAD_LEFT);
-        $min=str_pad((int) $vecFecha[minute],2,"0",STR_PAD_LEFT);
-        $mes=str_pad((int) $vecFecha[month],2,"0",STR_PAD_LEFT);
-        $dia=str_pad((int) $vecFecha[day],2,"0",STR_PAD_LEFT);
-
+        $fecha = $this->normalizarDate($vecFecha);
         return '<div class="media">
                     <div class="media-left">
                         <h3 class="media-heading">'.htmlentities($apodo).' </h3>
                         <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="icono2 media-object" >
                             '.$face.$redSoc2.'
                     </div>
-                    <div class="media-body "><h6 class="text-right"> '.$dia.'/'.$mes.'/'.$vecFecha[year].'<br/>'.$hora.':'.$min.'</h6>
+                    <div class="media-body "><h6 class="text-right"> '.$fecha[dia].'/'.$fecha[mes].'/'.$fecha[anio].'<br/>'.$fecha[hora].':'.$fecha[minutos].'</h6>
                         <div class="contenedor1">                                
                             <div class="comentario1">'.$contenido.'
                             </div>
                         </div>'.$borrado.'         
                     </div>
                 </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
+    }
+
+    public function normalizarDate($vecFecha){
+        $hora=str_pad((int) $vecFecha[hour],2,"0",STR_PAD_LEFT);
+        $min=str_pad((int) $vecFecha[minute],2,"0",STR_PAD_LEFT);
+        $mes=str_pad((int) $vecFecha[month],2,"0",STR_PAD_LEFT);
+        $dia=str_pad((int) $vecFecha[day],2,"0",STR_PAD_LEFT);
+        return $fecha=array('anio'=>$vecFecha[year],
+                            'mes'=>$mes,
+                            'dia'=>$dia,
+                            'hora'=>$hora,
+                            'minutos'=>$min,
+                            );
     }
     
 }

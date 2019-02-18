@@ -12,7 +12,7 @@
 		<label class="col-sm-2 col-form-label control-label" for="unaPassword">Password:</label>
 		<div class="col-sm-4" id="password1">
 			<input type="password" name="unaPassword" id="password" placeholder="entre 5 y 8 caracteres">
-			<a  href="/RegistrarUsuario/IniciarRecupPass"><small id="avisoPass" class="form-text text-muted">olvide mi contraseña</small></a>
+			<a  href="/RegistrarUsuario/IniciarRecupPass"><small id="avisoPass" class="form-text ">( OLVIDE MI CONTRASEÑA )</small></a>
 		</div>
 	</div>
 	<input type="submit" id="iniciarSesion" value="Listo" class="btn btn-secondary enlace">

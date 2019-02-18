@@ -1,4 +1,5 @@
 <?php 
+define('NOMBRE_SITIO'       ,'unaWeb');
 define('DOMINIO',           'www.unaweb.com');
 define('MAIL_ADM',          'comunidad.una.visuales@gmail.com');
 define('PASS_MAIL',         'unavisuales0+*');
@@ -22,6 +23,9 @@ define('TAM_AUTOR_MAX',     70);
 define('TAM_MATERIA_MAX',   113);
 define('TAM_TIT_SEC_MAX',   45);
 define('TAM_DESC_SEC_MAX',  100);
+define('TAM_CATEDRA_MAX',   60);
+define('TAM_PROF_MAX',      90);
+define('TAM_SEDE_MAX',      40);
 define('CANT_BTN_PAGS',     7);
 define('CANT_COMENTS',      10);
 define('CANT_TEMAS',        10);
