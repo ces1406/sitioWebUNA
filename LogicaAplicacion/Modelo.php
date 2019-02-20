@@ -616,6 +616,26 @@ class Modelo
         $resultado=$unMysqli->query($sql);
         Modelo::cerrarConexion($unMysqli);
     }       
+    public static function eliminarComentCatedra ($id) {
+        $vecUser=null;
+        $unMysqli=Modelo::conectarDB();
+        if($unMysqli==false){
+            return null;
+        }
+        $sql="DELETE FROM unaWebDB.unaComentarioXcatedra WHERE idComentario='".$id."'";        
+        $resultado=$unMysqli->query($sql);
+        Modelo::cerrarConexion($unMysqli);
+    } 
+    public static function eliminarComentCurso ($id) {
+        $vecUser=null;
+        $unMysqli=Modelo::conectarDB();
+        if($unMysqli==false){
+            return null;
+        }
+        $sql="DELETE FROM unaWebDB.unaComentarioXcurso WHERE idComentario='".$id."'";        
+        $resultado=$unMysqli->query($sql);
+        Modelo::cerrarConexion($unMysqli);
+    } 
 
     public static function ultimasOpiniones(){
         $vecComents=null;

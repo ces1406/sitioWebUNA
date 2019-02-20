@@ -213,6 +213,26 @@ class ControladorAdministrar extends ControladorPorDefecto
         }
         header('Location:http://'.DOMINIO.'/Seccion/irTema/'.$idTema.'/'.$pag);
     }
+    public function metodoEliminarComentCatedra($idComent,$idCatedra,$pag){
+        if(!$this->chequearPass())  return $this->msjAtencion("error en la contraseña ingresada");
+        if (!is_numeric($idComent)) return $this->msjAtencion('error en el id del apunte ingresado');
+        if($this->getUsuario()->getRol()=='ADMI'){
+            if($_POST['confirmado']=='si'){
+                Modelo::eliminarComentCatedra($idComent);
+            }
+        }
+        header('Location:http://'.DOMINIO.'/Seccion/irHiloOpinion/'.$idCatedra.'/'.$pag);
+    }
+    public function metodoEliminarComentCurso($idComent,$idCurso,$pag){/*TODO*/
+        if(!$this->chequearPass())  return $this->msjAtencion("error en la contraseña ingresada");
+        if (!is_numeric($idComent)) return $this->msjAtencion('error en el id del comentario');
+        if($this->getUsuario()->getRol()=='ADMI'){
+            if($_POST['confirmado']=='si'){
+                Modelo::eliminarComentCurso($idComent);
+            }
+        }
+        header('Location:http://'.DOMINIO.'/Seccion/Curso/'.$idCurso.'/'.$pag);
+    }
 
     public function setearFormuListarUsers() {
         $this->getVista()->modificarCuerpo('{listado}','<form class="form-horizontal" id="listadoUsuarios" action="/Administrar

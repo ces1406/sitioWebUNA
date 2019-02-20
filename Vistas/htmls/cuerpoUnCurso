@@ -1,11 +1,12 @@
 <div class="card text-white bg-dark col-sm-{colIzq}" id="panelIzq" >
 	<img class="card-img-top" src="/Vistas/imagenes/item12.png" height="35" alt="Card image cap">
-	<div class="card-body" id="comentarioInicio">
+	<div class="card-body contenedor0" id="comentarioInicial">
 		<h1>Curso</h1> 
 		{curso}
-		<br>
-		<img src="/Vistas/imagenes/separador.png" class="separador">
-	
+		<br>		
+	</div>
+	<img src="/Vistas/imagenes/separador.png" class="separador">
+	<div id="opinionesCargadas" class="">
 		<h2>Comentarios:</h2><br/>
 		<div class="media" id="menu0">
 			<div class="navbar-nav" id="menuTemas1">

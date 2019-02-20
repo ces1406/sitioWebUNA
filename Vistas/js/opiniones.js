@@ -1,36 +1,76 @@
 var main=function(){
 	ponerFecha();
-	controlarUsuario();
+	if(document.getElementById('opinionesCargadas')!=null){
+		ajustarComentarios();
+		redimensionarImgsComentsOdinarios();		
+	}
 	if(document.getElementById('ultimosComentarios')!=null){
 		redimensionarImgsUltimosComents();
-	};
-	if(document.getElementById('opinionesCargadas')!=null){
-		redimensionarImgsComentsOdinarios();
-	}
+	}	
+	if(document.getElementById('idDeComent')!=null) borrado();
+	if(document.getElementById('crearComentario')!=null) controlarTextArea();
 	
-};
+	controlarUsuario();
+}
+function ajustarComentarios(){
+	console.log('****ajustandoComentarios******');
+	var anchor = document.getElementById('comentarioInicial').clientWidth;
+	var coments = document.getElementsByClassName('comentario1');
+	var contenedores = document.getElementsByClassName('contenedor1');
+	for (let i = 0; i < coments.length; i++) {
+		var element = coments[i];
+		//console.log('comentatios1  nro.: '+i+' innerHTML'+element.innerHTML);
+		element.style.cssText = 'max-width: '+(85*anchor/100)+'px !important;'; //el 85% del anchor		
+		element.style.cssText = 'min-width: '+(85*anchor/100)+'px !important;';
+	}
+	for (let i = 0; i < contenedores.length; i++) {
+		var element = contenedores[i];
+		//console.log('contenedores1 nro.: '+i+' innerHTML'+element.innerHTML);
+		element.style.cssText = 'min-width: '+(85*anchor/100)+'px !important;'; //el 85% del anchor	
+		element.style.cssText = 'max-width: '+(85*anchor/100)+'px !important;';	
+	}
+}
+function borrado(){
+	console.log('agrego borrado');
+	var vecFormus = document.getElementsByClassName('formuBorrar');
+	for (let i = 0; i < vecFormus.length; i++) {
+		vecFormus[i].addEventListener('submit',ponerBorrado,false);		
+	}
+}
+function ponerBorrado(event){
+	console.log('en borrado');
+	event.preventDefault();
+	console.log('this:'+this);
+	var idComentario =this.getElementsByTagName('input')[0].attributes['value'].value;
+	var idCatedra=document.getElementById('idDeTema').attributes['value'].value; //es el idCatedra aunque en el form lo nombre como idDeTema
+	var pag=document.getElementById('idDePag').attributes['value'].value;
 
-function limitaTxt1(){
+	var conte ='<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">';
+		conte += '<form class="form-inline" id="" action="/Administrar/EliminarComentCatedra/'+idComentario+'/'+idCatedra+'/'+pag+'" method="POST" enctype="multipart/form-data">';
+		conte += '	<h6>El comentario se eliminara permanentemente, esta seguro de borrarlo? &nbsp; </h6> ';
+		conte +='	<div class="custom-control custom-radio custom-control-inline"><input type="radio" id="si" name="confirmado" class="custom-control-input" value="si"><label class="custom-control-label" for="si">Si</label></div>';
+		conte +='	<div class="custom-control custom-radio custom-control-inline"><input type="radio" id="no" name="confirmado" class="custom-control-input" value="no"><label class="custom-control-label" for="no">No</label></div>';
+		conte +='	<button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">OK</button>';
+		conte +='	<div class="form-group mx-sm-3 mb-2 py-0 my-0" id="" >';
+		conte +='		<input type="password" class="form-control py-0 my-0" name="unaPassword1" placeholder="password de Admin" style="font-size: 1.6ex;"required>';
+		conte +='	</div></form> </div>';		
+	this.outerHTML =conte;
+	return false;
+}
+function limitaTextoMateriaYCatedra(){
 	if(this.value.length>59){
 		this.value=null;
 	}else{
 		return true;
 	}
-};
-function limitaTxt2(){
-	if(this.value.length>59){
-		this.value=null;
-	}else{
-		return true;
-	}
-};
-function limitaTxt3(){
+}
+function limitaTextoProfe(){
 	if(this.value.length>99){
 		this.value=null;
 	}else{
 		return true;
 	}
-};
+}
 function cambiarDimension(anchor,cadena){
 	console.log('cadena llegada: '+cadena.outerHTML);
 	console.log('ancho original-alto original: '+cadena.style.width+' x '+cadena.style.height);
@@ -91,39 +131,31 @@ function redimensionarImgsUltimosComents(){
 	}
 }
 function controlarUsuario(){
-	var materia1=document.getElementById('materia1');
-	var catedra1=document.getElementById('catedra1');
-	var profesor1=document.getElementById('profesor1');;
-	
-	var materia2=document.getElementById('materia2');
-	var catedra2=document.getElementById('catedra');
-	var profesor2=document.getElementById('profesor');
-	
-	var formu1=document.getElementById('unFormulario1');
 	var formu2=document.getElementById('unFormulario2');
-	var formu3=document.getElementById('comentar');
-	var comentar=document.getElementById('comentar');
+	/*var comentar=document.getElementById('area1');
 	
 	if(comentar!=null){
-		console.log('vacia');
+		console.log('textArea presente');
 		comentar.addEventListener('click',chequearTextArea);
 		console.log('area');
-		//formu3.addEventListener('submit',chequearTextArea,false);
-	}
-	if(formu1!=null){
-		materia1.addEventListener('keypress',limitaTxt1,false);
-		catedra1.addEventListener('keypress',limitaTxt2,false);
-		profesor1.addEventListener('keypress',limitaTxt3,false);
-	}
-	if(formu2!=null){
+	}*/
+	if(formu2!=null){		
 		formu2.addEventListener('submit',chequearCampos2,false);
-		materia2.addEventListener('keypress',limitaTxt1,false);
-		catedra2.addEventListener('keypress',limitaTxt2,false);
-		profesor2.addEventListener('keypress',limitaTxt3,false);
+		var materia2=document.getElementById('materia2');
+		var catedra2=document.getElementById('catedra2');
+		var profesor2=document.getElementById('profesor2');
+		materia2.addEventListener('keypress',limitaTextoMateriaYCatedra,false);
+		catedra2.addEventListener('keypress',limitaTextoMateriaYCatedra,false);
+		profesor2.addEventListener('keypress',limitaTextoProfe,false);
 	}
 }
+function controlarTextArea(){
+	var formComent=document.getElementById('crearComentario');
+	formComent.addEventListener('submit',chequearTextArea,false);
+}
 function chequearTextArea(event){
-	var aviso=document.getElementById('avisoTxt');
+	console.log('en chequearTextArea');
+	var aviso=document.getElementById('aviso');
 	console.log('el area esta ');
 	if (/^\s*$/.test(CKEDITOR.instances.area1.document.getBody().getText())) {
 	  	console.log('Vacío');
@@ -136,9 +168,9 @@ function chequearTextArea(event){
 	}
 }
 function chequearCampos2(event){
-	var materia2=document.getElementById('materia');
-	var catedra2=document.getElementById('catedra');
-	var sede2=document.getElementById('profesor');
+	var materia2=document.getElementById('materia2');
+	var catedra2=document.getElementById('catedra2');
+	//var profesor2=document.getElementById('profesor2');
 	var cancelar=false;
 	
 	if(materia2.value.length<4||materia2.value==null){
@@ -162,7 +194,6 @@ function chequearCampos2(event){
 	}
 	return true;
 }
-
 function ponerFecha(){
 	var var2=document.getElementById("fecha");
 	var ahora= new Date();
@@ -171,7 +202,7 @@ function ponerFecha(){
 	var anio=ahora.getFullYear().toString();
 	var fecha=dia+'-'+mes.toString()+'-'+anio;
 	var2.appendChild(document.createTextNode(fecha));
-};
+}
 
 window.onload=function(){
 	if(document.getElementById('area1')!=null){

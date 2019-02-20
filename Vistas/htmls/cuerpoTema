@@ -1,5 +1,6 @@
 <div class="card text-white bg-dark col-sm-{colIzq}" id="panelIzq" >
 	<!--img class="card-img-top" src="/Vistas/imagenes/item12.png" height="35" alt="Card image cap"-->
+	<h1>Secci&oacute;n: {nombreSeccion}</h1>
 	<div class="card-body" id="comentarioInicio">
 		<h2>Tema: "{nombreTema}"</h2><br/>
 		<div class="media contenedor0" id="comentarioInicial">

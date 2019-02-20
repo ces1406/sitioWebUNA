@@ -29,58 +29,32 @@ function ponerBorrado(event){
 	this.outerHTML =conte;
 	return false;
 }
-function limitaTxt1(){
-	if(this.value.length>7){
+function limitaTextoTituloYAutor(){
+	if(this.value.length>99){
 		this.value=null;
 	}else{
 		return true;
 	}
-};
-function limitaTxt2(){
-	if(this.value.length>29){
-		this.value=null;
-	}else{
-		return true;
-	}
-};
-function limitaTxt3(){
-	if(this.value.length>44){
-		this.value=null;
-	}else{
-		return true;
-	}
-};
-function limitaTxt4(){
-	if(this.value.length>69){
-		this.value=null;
-	}else{
-		return true;
-	}
-};
-function limitaTxt5(){
+}
+function limitaDirUrl(){
 	if(this.value.length>144){
 		this.value=null;
 	}else{
 		return true;
 	}
-};
+}
 function controlarUsuario(){
-	var titulo1=document.getElementById('titulo1');
-	var autor1=document.getElementById('autor1');
-	var titulo2=document.getElementById('titulo2');
-	var autor2=document.getElementById('autor2');
-	var url=document.getElementById('ubicacionUrl');
 	var formu2=document.getElementById('unFormulario2');
-	
-	if(autor1!=null) autor1.addEventListener('keypress',limitaTxt3,false);
-	if(titulo1!=null) titulo1.addEventListener('keypress',limitaTxt4,false);
-	
+
 	if(formu2!=null){
 		formu2.addEventListener('submit',chequearCampos2,false);
-		autor2.addEventListener('keypress',limitaTxt3,false);
-		titulo2.addEventListener('keypress',limitaTxt4,false);
-		url.addEventListener('keypress',limitaTxt5,false);
-	}
+		var titulo2=document.getElementById('titulo2');
+		var autor2=document.getElementById('autor2');
+		var url=document.getElementById('ubicacionUrl');		
+		autor2.addEventListener('keypress',limitaTextoTituloYAutor,false);
+		titulo2.addEventListener('keypress',limitaTextoTituloYAutor,false);
+		url.addEventListener('keypress',limitaDirUrl,false);
+	}	
 }
 function chequearCampos2(event){
 	var titulo=document.getElementById('titulo2');
@@ -108,7 +82,6 @@ function chequearCampos2(event){
 	}
 	return true;
 }
-
 function ponerFecha(){
 	var var2=document.getElementById("fecha");
 	var ahora= new Date();
@@ -117,6 +90,6 @@ function ponerFecha(){
 	var anio=ahora.getFullYear().toString();
 	var fecha=dia+'-'+mes.toString()+'-'+anio;
 	var2.appendChild(document.createTextNode(fecha));
-};
+}
 
 window.onload=main();

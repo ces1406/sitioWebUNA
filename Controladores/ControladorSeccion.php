@@ -23,7 +23,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         $listaTemas=null;
         $vecTemas=array_slice($temas,($pagina-1)*CANT_TEMAS,CANT_TEMAS,true);
         if(!empty($vecTemas)){                          // Listando los temas de la seccion
-            foreach ($vecTemas as $tema){  $listaTemas .= $this->getVista()->crearLiTema($tema->getIdTema(),$tema->getTitulo());  }
+            foreach ($vecTemas as $tema){  $listaTemas .= $this->getVista()->crearLiTema($idSeccion,$tema->getIdTema(),$tema->getTitulo());  }
         }
         $unHref='<li class="page-item"><a class="page-link" href="/Seccion/irSeccion/'.$nombreSeccion.'/'.$idSeccion.'/';
         $botones = new Paginacion($pagina,$cantTemas,$unHref);
@@ -83,10 +83,21 @@ class ControladorSeccion extends ControladorPorDefecto{
         // listando los comentarios
         foreach ($vecComents as $comentario){
             $usuario = Modelo::buscarUsuario($comentario["idUsuario"]);
-            $listaComents .= $this->getVista()->crearComentario($usuario["dirImg"],$usuario["apodo"],$comentario["fechaHora"],$comentario["contenido"]);
+            $vecFecha=date_parse($comentario["fechaHora"]);
+            $face=NULL;
+            $redSoc2=NULL;
+            $face = (($usuario["redSocial1"]==NULL)||(empty($usuario["redSocial1"])))? ''
+                :'<div class=""><a href="'.$usuario["redSocial1"].'"> <img src="/Vistas/imagenes/face.png" class="icono3" ></a></div>';
+            $redSoc2 = (($usuario["redSocial2"]==NULL)||(empty($usuario["redSocial2"])))? ''
+                :'<div clas=""><a href="'.$usuario["redSocial2"].'"> <img src="/Vistas/imagenes/redSocial2.png" class="icono3"></a></div>';
+            ($this->getUsuario()->getRol()=='ADMI')?
+                // Solo mostrar la opcion de borrar el comentario (el borrado efectivo se hace en ControladorAdministrar->metodoEliminarComentario)
+                $borrado = $this->getVista()->crearMenuBorrarMsj($comentario["idComentario"],$idCurso,$pagina)                 
+                :$borrado='';
+            $listaComents .= $this->getVista()->crearListaComentarios($usuario["apodo"],$usuario["dirImg"],$face,$redSoc2,$vecFecha,$comentario["contenido"],$borrado);
         }
-        $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/temas.js');
-        $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/temas.css');
+        $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/cursos.js');
+        $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
         $this->getVista()->modificarCuerpo('{pieIzq}','comentarios de usuarios');
         $this->getVista()->modificarCuerpo('{listaComentarios}',$listaComents);
         $this->getVista()->modificarCuerpo('{paginacion}',$botones->getBotonera());
@@ -243,26 +254,34 @@ class ControladorSeccion extends ControladorPorDefecto{
         $listaComents=null;
         $vecComents=array_slice($vecComentarios, ($pagina-1)*CANT_COMENTS,CANT_COMENTS,true);
         
-        if ($this->getUsuario()->tieneSesion()&&($pagina-1==intdiv($cantComents-1,CANT_COMENTS))) {
-            $subMenuSesion=$this->getVista()->crearAreaComentaje($_SESSION["img"]);
-            $this->getVista()->modificarCuerpo('{action}','action="/Seccion/ComentarCatedra/'.$idCatedra.'"');
-        }else{
-            $subMenuSesion='';
-        }
+        $subMenuSesion=($this->getUsuario()->tieneSesion()&&($pagina-1==intdiv($cantComents-1,CANT_COMENTS)))?
+                        $this->getVista()->crearAreaComentaje($_SESSION["img"]) :'';
         $unHref='<li class="page-item"><a class="page-link" href="/Seccion/irHiloOpinion/'.$idCatedra.'/';
         $botones = new Paginacion($pagina,$cantComents,$unHref);
 
         // listando los comentarios
         foreach ($vecComents as $comentario){
             $usuario = Modelo::buscarUsuario($comentario["idUsuario"]);
-            $listaComents .= $this->getVista()->crearComentario($usuario["dirImg"],$usuario["apodo"],$comentario["fechaHora"],$comentario["contenido"]);
+            $vecFecha=date_parse($comentario["fechaHora"]);
+            $face=NULL;
+            $redSoc2=NULL;
+            $face = (($usuario["redSocial1"]==NULL)||(empty($usuario["redSocial1"])))? ''
+                :'<div class=""><a href="'.$usuario["redSocial1"].'"> <img src="/Vistas/imagenes/face.png" class="icono3" ></a></div>';
+            $redSoc2 = (($usuario["redSocial2"]==NULL)||(empty($usuario["redSocial2"])))? ''
+                :'<div clas=""><a href="'.$usuario["redSocial2"].'"> <img src="/Vistas/imagenes/redSocial2.png" class="icono3"></a></div>';
+            ($this->getUsuario()->getRol()=='ADMI')?
+                // Solo mostrar la opcion de borrar el comentario (el borrado efectivo se hace en ControladorAdministrar->metodoEliminarComentario)
+                $borrado = $this->getVista()->crearMenuBorrarMsj($comentario["idComentario"],$idCatedra,$pagina)                 
+                :$borrado='';
+            $listaComents .= $this->getVista()->crearListaComentarios($usuario["apodo"],$usuario["dirImg"],$face,$redSoc2,$vecFecha,$comentario["contenido"],$borrado);             
         }
         $this->getVista()->modificarCuerpo('{scriptJs}','/Vistas/js/opiniones.js');
-        $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/opiniones.css');
+        $this->getVista()->modificarCuerpo('{archCss}','/Vistas/css/index.css');
         $this->getVista()->modificarCuerpo('{pieIzq}','comentarios de usuarios');
         $this->getVista()->modificarCuerpo('{listaOpiniones}',$listaComents);
         $this->getVista()->modificarCuerpo('{paginacion}',$botones->getBotonera());
         $this->getVista()->modificarCuerpo('{tieneSesion}',$subMenuSesion);
+        $this->getVista()->modificarCuerpo('{action}','action="Seccion/ComentarCatedra/'.$idCatedra.'"');
         return $this->getVista();
     }
 
@@ -349,7 +368,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         return $this->getVista();
     }
     
-    public function metodoIrTema($idTema,$pagina) {
+    public function metodoIrTema($idSec,$idTema,$pagina) {
         $this->getVista()->armarHtml();
         $this->getVista()->modificarCuerpo('{sectorDerecha}','');
         $this->getVista()->modificarCuerpo('{sectorIzquierda}',file_get_contents(DIR_RAIZ.DIR_VISTA.DIR_HTMLS.'/cuerpoTema'));
@@ -358,7 +377,9 @@ class ControladorSeccion extends ControladorPorDefecto{
         $vecData = Modelo::buscarTema($idTema);
         if (empty($vecData)) return $this->msjAtencion('no existe la pagina pedida');
         
+        $vecSeccion=Modelo::buscarSeccion($idSec);
         $tema = new Tema($vecData);
+        $this->getVista()->modificarCuerpo('{nombreSeccion}',$vecSeccion["nombreSeccion"]);
         $this->getVista()->modificarCuerpo('{nombreTema}',htmlentities($tema->getTitulo()));
         $usuario = Modelo::buscarUsuario($tema->getAutor());
         $face=NULL;

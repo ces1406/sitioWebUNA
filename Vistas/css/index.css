@@ -18,12 +18,12 @@
 }
 h1{
 	color: #EFECEA;
-	font-size: 3.5ex;
+	font-size: 3.3ex;
 	font-weight: 300 !important;
 }
 h2{
 	color: #EFECEA;
-	font-size: 1.9ex;
+	font-size: 2.2ex;
 }
 h3{
 	color: #EFECEA;
@@ -224,6 +224,7 @@ body{
 	border-radius: 1.5ex !important;
 	background-color: rgb(243, 244, 245)!important;
 	color:#000000 !important;
+	line-height:1.2 !important;
 }
 .comentario1 p{
 	font-size: 2.4ex!important;

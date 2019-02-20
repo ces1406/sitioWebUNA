@@ -20,7 +20,7 @@
 						<input class="form-control mr-sm-1" type="search" placeholder="" aria-label="Search" name="palabra" maxLength=28>
 						<button class="btn btn-sm enlace" type="submit">Buscar</button>
 					</form>
-					<small class="">Buscar en el sitio todo lo relacionado a la/s palabra/s que ingreses</small>
+					<small class="">Buscar en el sitio todo lo relacionado a una palabra que ingreses</small>
 				</li>
 			</ul>
 			<div id="sectorUsuario">

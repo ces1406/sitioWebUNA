@@ -17,8 +17,8 @@ function controlarUsuario(){
 	var user=document.getElementById('apodo');
 	var pass=document.getElementById('password')
 	var formu=document.getElementById('inicioSesion');
-	user.addEventListener('keypress',limitaTxt,false);
-	pass.addEventListener('keypress',limitaTxt,false);
+	user.addEventListener('keypress',limitaTextoApodo,false);
+	pass.addEventListener('keypress',limitaTextoPass,false);
 	formu.addEventListener('submit',chequearCampos,false);
 }
 function chequearCampos(event){
@@ -40,7 +40,14 @@ function chequearCampos(event){
 		return true;
 	}
 }
-function limitaTxt(){
+function limitaTextoApodo(){
+	if(this.value.length>24){
+		this.value=null;
+	}else{
+		return true;
+	}
+}
+function limitaTextoPass(){
 	if(this.value.length>7){
 		this.value=null;
 	}else{

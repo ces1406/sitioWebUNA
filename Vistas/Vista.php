@@ -72,20 +72,23 @@ class Vista{
 						    </div>
 					    </div>
 					    <button class="btn btn-secondary btn-sm enlace" type="submit" id="CrearComentario">COmentar</button>
+                        <h5 id="aviso"></h5>
                     </form>
                 </div>
             </div>
+            
             <img src="/Vistas/imagenes/separador.png" class="separador">';
     }
 
-    public function crearComentario($dirImg,$apodo,$fecha,$contenido){
+    /*public function crearComentario($dirImg,$apodo,$fecha,$contenido){
         $vecFecha=date_parse($fecha);
+        $fecha = $this->normalizarDate($vecFecha);
         return '<div class="media">
                     <div class="media-left">
-                        <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="comentarista media-object" >
                         <h3 class="media-heading">'.htmlentities($apodo).' </h3>
+                        <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="icono2 media-object" >
                         <div id="fechaHora">
-                            <small class="text-muted">'.$vecFecha[day].'/'.$vecFecha[month].'/'.$vecFecha[year].'<br/>'.$vecFecha[hour].':'.$vecFecha[minute].'</small>
+                            <small class="text-muted">'.$fecha[dia].'/'.$fecha[mes].'/'.$fecha[anio].'<br/>'.$fecha[hora].':'.$fecha[minutos].'</small>
                         </div>
                     </div>
                     <div class="media-body">
@@ -95,16 +98,16 @@ class Vista{
                     </div>
                 </div>
                 <img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
-    }
+    }*/
     
     public function crearTituloTemaCurso($mate,$catedra,$sede,$hora,$cod){
         return '<h2>Materia: '.$mate.'<br/>cátedra: '.$catedra.'<br/>sede: '.$sede.'<br/>horario: '
                 .$hora.'<br/>curso: '.$cod.'</h2>';
     }
 
-    public function crearLiTema($idTema,$titulo){
+    public function crearLiTema($idSeccion,$idTema,$titulo){
         return '<li class="nav-item li0 enlace "><img src="/Vistas/imagenes/item7.png" width="40" height="40"/>
-                <a href="/Seccion/IrTema/'.$idTema.'/1" >'.htmlentities($titulo).'</a>	</li>';
+                <a href="/Seccion/IrTema/'.$idSeccion.'/'.$idTema.'/1" >'.htmlentities($titulo).'</a>	</li>';
     }
 
     public function crearBotonIniciarTema(){

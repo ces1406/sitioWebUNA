@@ -5,7 +5,7 @@
 		<img src="/Vistas/imagenes/separador.png" class="separador">
 		<br>
 		<div class="media-body">
-			<div id="materiaCatedra">
+			<div id="comentarioInicial" class="contenedor0">
 				{catedra}
 			</div>
 			<img src="/Vistas/imagenes/separador.png" class="separador">

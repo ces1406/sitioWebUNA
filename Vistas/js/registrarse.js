@@ -11,15 +11,22 @@ function ponerFecha(){
 	var fecha=dia+'-'+mes.toString()+'-'+anio;
 	var2.appendChild(document.createTextNode(fecha));
 };
-function limitaTxt(){
+function limitaTextoApodo(){
+	if(this.value.length>26){
+		this.value=null;
+	}else{
+		return true;
+	}
+};
+function limitaTextoPass(){
 	if(this.value.length>7){
 		this.value=null;
 	}else{
 		return true;
 	}
 };
-function limitaTxt2(){
-	if(this.value.length>40){
+function limitaTextoDirMail(){
+	if(this.value.length>140){
 		this.value=null;
 	}else{
 		return true;
@@ -32,19 +39,19 @@ function controlarUsuario(){
 	var mail1=document.getElementById('mail');
 	var formu=document.getElementById('unFormulario');/*('registroUsuario');*/
 	if(user1!=null){
-		user1.addEventListener('keypress',limitaTxt,false);
+		user1.addEventListener('keypress',limitaTextoApodo,false);
 		user1.addEventListener('focusout',apodoRepetido,true);
 		user1.addEventListener('focusin',limpiarAviso,false);
 		console.log("hay user1: "+user1);
 	}
 	if(pas1!=null){
-		pas1.addEventListener('keypress',limitaTxt,false);
+		pas1.addEventListener('keypress',limitaTextoPass,false);
 	}
 	if(pas2!=null){
-		pas2.addEventListener('keypress',limitaTxt,false);
+		pas2.addEventListener('keypress',limitaTextoPass,false);
 	}
 	if(mail1!=null){
-		mail1.addEventListener('keypress',limitaTxt2,false);
+		mail1.addEventListener('keypress',limitaTextoDirMail,false);
 		mail1.addEventListener('focusout',mailRepetido);
 		mail1.addEventListener('focusin',limpiarAviso);
 	}
@@ -69,17 +76,7 @@ function chequearCampos(event){
 			small1.textContent='NO INDICASTE TU APODO';
 			small1.setAttribute("style","color:#FB9209 !important;font-weight:bold !important;");
 			cancelar=true;
-		}/*else{
-			console.log('llendo a ver el tema del apodo');
-			if(apodoRepetido(user.value)==1){
-				console.log('esistia el apodo');
-				var small1=document.getElementById('avisoApodo');
-				small1.textContent='EL APODO '+user.value+' YA EXISTE PRUEBA CON OTRO';
-				small1.setAttribute("style","color:#FB9209 !important;font-weight:bold !important;");
-				cancelar=true;
-			}
-		}*/
-		
+		}		
 	}
 	if(pass1!=null && pass2!=null){
 		if(!(pass1.value==pass2.value)){
