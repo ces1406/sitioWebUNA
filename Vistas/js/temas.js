@@ -4,8 +4,8 @@ var main=function(){
 	redimensionarImgsComentInicial();
 	ajustarComentarios();
 	redimensionarImgsComentsOdinarios();
-	
-};
+	if(document.getElementById('crearComentario')!=null) controlarTextArea();
+}
 function borrado(){
 	console.log('en borrado');
 	var vecFormus = document.getElementsByClassName('formuBorrar');
@@ -15,7 +15,6 @@ function borrado(){
 	}
 	console.log('vamo a chequear campos');
 }
-
 function ponerBorrado(event){
 	console.log('en borrado');
 	/*var form1=document.getElementById('formuBorrar');
@@ -24,16 +23,17 @@ function ponerBorrado(event){
 		event.preventDefault();
 		//var form1=document.getElementById('formuBorrar');
 		console.log('por aca');
-		var idCom=document.getElementById('idDeComent').attributes['value'].value;
+		var idCom=this.getElementsByTagName('input')[0].attributes['value'].value;
 		var idTem=document.getElementById('idDeTema').attributes['value'].value;
 		var pag=document.getElementById('idDePag').attributes['value'].value;
+		var idSec=document.getElementById('idDeSec').attributes['value'].value;
 		console.log('+++++++++++++++++++++++++++++++++++++++++');
 		console.log('coment:'+idCom+' tema:'+idTem+' pag:'+pag);
 		console.log('+++++++++++++++++++++++++++++++++++++++++');
 
-		var conte ='<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">';
-		conte += '<form class="form-inline" id="" action="/Administrar/EliminarComentario/'+idCom+'/'+idTem+'/'+pag+'" method="POST" enctype="multipart/form-data">';
-		conte += '	<h6>El comentario se eliminara permanentemente, esta seguro de borrarlo? &nbsp; </h6> ';
+		var conte ='<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);font-size:1.7ex !important">';
+		conte += '<form class="form-inline" id="" action="/Administrar/EliminarComentario/'+idSec+'/'+idCom+'/'+idTem+'/'+pag+'" method="POST" enctype="multipart/form-data">';
+		conte += '	<h3>El comentario se eliminara permanentemente, esta seguro de borrarlo? &nbsp; </h3> ';
 		conte +='	<div class="custom-control custom-radio custom-control-inline"><input type="radio" id="si" name="confirmado" class="custom-control-input" value="si"><label class="custom-control-label" for="si">Si</label></div>';
 		conte +='	<div class="custom-control custom-radio custom-control-inline"><input type="radio" id="no" name="confirmado" class="custom-control-input" value="no"><label class="custom-control-label" for="no">No</label></div>';
 		conte +='	<button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">OK</button>';
@@ -44,7 +44,6 @@ function ponerBorrado(event){
 		return false;
 	//}  
 }
-
 function ponerFecha(){
 	var var2=document.getElementById("fecha");
 	var ahora= new Date();
@@ -53,7 +52,7 @@ function ponerFecha(){
 	var anio=ahora.getFullYear().toString();
 	var fecha=dia+'-'+mes.toString()+'-'+anio;
 	var2.appendChild(document.createTextNode(fecha));
-};
+}
 function cambiarDimension(anchor,cadena){
 	var j=0;
 	var ancho='';
@@ -81,7 +80,6 @@ function cambiarDimension(anchor,cadena){
 	cadena.style.width = ancho+'px';
 	cadena.style.height= alto+'px';
 }
-
 function redimensionarImgsComentsOdinarios() {	
 	var comentarios = document.getElementsByClassName('contenedor1');
 	var anchor = document.getElementById('comentarioInicial').clientWidth;
@@ -117,6 +115,24 @@ function ajustarComentarios(){
 		var element = contenedores[i];
 		console.log('contenedores1 nro.: '+i+' innerHTML'+element.innerHTML);
 		element.style.cssText = 'min-width: '+(85*anchor/100)+'px !important;'; //el 85% del anchor		
+	}
+}
+function controlarTextArea(){
+	var formComent=document.getElementById('crearComentario');
+	formComent.addEventListener('submit',chequearTextArea,false);
+}
+function chequearTextArea(event){
+	console.log('en chequearTextArea');
+	var aviso=document.getElementById('aviso');
+	console.log('el area esta ');
+	if (/^\s*$/.test(CKEDITOR.instances.area1.document.getBody().getText())) {
+	  	console.log('Vacío');
+	  	aviso.textContent='debes escribir algo';
+	  	event.preventDefault();
+	  	return false;
+	} else {
+	  	console.log('llena');
+	  	return true;
 	}
 }
 window.onload=function(){

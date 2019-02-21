@@ -79,27 +79,6 @@ class Vista{
             
             <img src="/Vistas/imagenes/separador.png" class="separador">';
     }
-
-    /*public function crearComentario($dirImg,$apodo,$fecha,$contenido){
-        $vecFecha=date_parse($fecha);
-        $fecha = $this->normalizarDate($vecFecha);
-        return '<div class="media">
-                    <div class="media-left">
-                        <h3 class="media-heading">'.htmlentities($apodo).' </h3>
-                        <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="icono2 media-object" >
-                        <div id="fechaHora">
-                            <small class="text-muted">'.$fecha[dia].'/'.$fecha[mes].'/'.$fecha[anio].'<br/>'.$fecha[hora].':'.$fecha[minutos].'</small>
-                        </div>
-                    </div>
-                    <div class="media-body">
-                        <div class="elComentario">
-                            '.$contenido.'
-                        </div>
-                    </div>
-                </div>
-                <img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
-    }*/
-    
     public function crearTituloTemaCurso($mate,$catedra,$sede,$hora,$cod){
         return '<h2>Materia: '.$mate.'<br/>cátedra: '.$catedra.'<br/>sede: '.$sede.'<br/>horario: '
                 .$hora.'<br/>curso: '.$cod.'</h2>';
@@ -219,13 +198,14 @@ class Vista{
 	             </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
     }
 
-    public function crearMenuBorrarMsj($idComentario,$idTema,$pagina){
+    public function crearMenuBorrarMsj($idComentario,$idTema,$pagina,$idSec){
         return '<div class="badge badge-primary text-wrap float-right" style="background-color: rgba(21, 24, 29, 0.9);">
                     <form class="form-inline formuBorrar" id="" action="" method="POST" enctype="multipart/form-data">
                         <button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">borrar comentario</button>
                         <input type="hidden" id="idDeComent" name="idComentario" value="'.$idComentario.'">
                         <input type="hidden" id="idDeTema" name="idTema" value="'.$idTema.'">
                         <input type="hidden" id="idDePag" name="pagina" value="'.$pagina.'">
+                        <input type="hidden" id="idDeSec" name="seccion" value="'.$idSec.'">
                     </form>
                 </div>'; 
     }
@@ -248,10 +228,10 @@ class Vista{
     }
 
     public function normalizarDate($vecFecha){
-        $hora=str_pad((int) $vecFecha[hour],2,"0",STR_PAD_LEFT);
-        $min=str_pad((int) $vecFecha[minute],2,"0",STR_PAD_LEFT);
-        $mes=str_pad((int) $vecFecha[month],2,"0",STR_PAD_LEFT);
-        $dia=str_pad((int) $vecFecha[day],2,"0",STR_PAD_LEFT);
+        $hora=str_pad((int) $vecFecha['hour'],2,"0",STR_PAD_LEFT);
+        $min=str_pad((int) $vecFecha['minute'],2,"0",STR_PAD_LEFT);
+        $mes=str_pad((int) $vecFecha['month'],2,"0",STR_PAD_LEFT);
+        $dia=str_pad((int) $vecFecha['day'],2,"0",STR_PAD_LEFT);
         return $fecha=array('anio'=>$vecFecha[year],
                             'mes'=>$mes,
                             'dia'=>$dia,

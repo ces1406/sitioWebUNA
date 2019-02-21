@@ -270,7 +270,7 @@ class ControladorRegistrarUsuario extends ControladorPorDefecto{
         $token=uniqid(rand(),true);
         $mensaje="Hola ".$vecUSer['apodo'].", te enviamos este mail para confirmar tu nueva direccion de correo.";
         $mensaje .= "Ahora necesitas ir al siguiente enlace para confirmar el cambio: ";
-        $mensaje .= "www.sitioPruebas.com/RegistrarUsuario/Confirmacion/";
+        $mensaje .= DOMINIO."/RegistrarUsuario/Confirmacion/";
         $mensaje .= $vecUser['idUsuario'].'/'.$token;
         if (($resultado=$this->enviarMail($mensaje,$_POST['unMail'],$apodo))!='OK') {
             return $resultado;

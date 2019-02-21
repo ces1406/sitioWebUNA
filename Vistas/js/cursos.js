@@ -7,6 +7,7 @@ var main=function(){
 	}
 	if(document.getElementById('idDeComent')!=null) {borrado();}
 	console.log('volvere1');	
+	if(document.getElementById('crearComentario')!=null) controlarTextArea();
 };
 
 function limitaTextoCatedra(){
@@ -193,7 +194,24 @@ function ajustarComentarios(){
 		element.style.cssText = 'min-width: '+(85*anchor/100)+'px !important;'; //el 85% del anchor		
 	}
 }
-
+function controlarTextArea(){
+	var formComent=document.getElementById('crearComentario');
+	formComent.addEventListener('submit',chequearTextArea,false);
+}
+function chequearTextArea(event){
+	console.log('en chequearTextArea');
+	var aviso=document.getElementById('aviso');
+	console.log('el area esta ');
+	if (/^\s*$/.test(CKEDITOR.instances.area1.document.getBody().getText())) {
+	  	console.log('Vacío');
+	  	aviso.textContent='debes escribir algo';
+	  	event.preventDefault();
+	  	return false;
+	} else {
+	  	console.log('llena');
+	  	return true;
+	}
+}
 window.onload=function(){
 	if(document.getElementById('area1')!=null){
 		CKEDITOR.replace('area1');

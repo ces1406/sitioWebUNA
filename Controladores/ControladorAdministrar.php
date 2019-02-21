@@ -203,7 +203,7 @@ class ControladorAdministrar extends ControladorPorDefecto
         header('Location:http://'.DOMINIO.'/Seccion/irAApuntes/default/0/Apuntes/10/1');  
     }
     
-    public function metodoEliminarComentario($idComent,$idTema,$pag){
+    public function metodoEliminarComentario($idSec,$idComent,$idTema,$pag){
         if(!$this->chequearPass())  return $this->msjAtencion("error en la contraseña ingresada");
         if (!is_numeric($idComent))     return $this->msjAtencion('error en el id del apunte ingresado');
         if($this->getUsuario()->getRol()=='ADMI'){
@@ -211,7 +211,8 @@ class ControladorAdministrar extends ControladorPorDefecto
                 Modelo::eliminarComentario($idComent);
             }
         }
-        header('Location:http://'.DOMINIO.'/Seccion/irTema/'.$idTema.'/'.$pag);
+        header('Location:http://'.DOMINIO.'/Seccion/irTema/'.$idSec.'/'.$idTema.'/'.$pag);
+        exit();
     }
     public function metodoEliminarComentCatedra($idComent,$idCatedra,$pag){
         if(!$this->chequearPass())  return $this->msjAtencion("error en la contraseña ingresada");

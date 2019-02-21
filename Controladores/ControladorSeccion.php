@@ -287,6 +287,7 @@ class ControladorSeccion extends ControladorPorDefecto{
 
     public function metodoComentarCatedra($idCatedra) {
         if(!filter_var($idCatedra,FILTER_VALIDATE_INT)) return $this->msjAtencion("error en la catedra ingresada");
+        if($_POST['unComentario']==NULL||$_POST['unComentario']=='') return $this->msjAtencion('el comentario esta vacío');
         Modelo::comentarCatedra($_SESSION['idUsuario'], $_POST['unComentario'], $idCatedra);
         header('Location:http://'.DOMINIO.'/Seccion/irHiloOpinion/'.$idCatedra.'/1');
     }
@@ -394,7 +395,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         $this->getVista()->modificarCuerpo('{comentario}',$tema->getComentarioInicial());
 
         $vecDate=$this->getVista()->normalizarDate(date_parse($tema->getFecha()));
-        $fechaString='<br/>'.$vecDate[dia].'/'.$vecDate[mes].'/'.$vecDate[anio].'<br/>'.$vecDate[hora].':'.$vecDate[minutos];
+        $fechaString='<br/>'.$vecDate['dia'].'/'.$vecDate['mes'].'/'.$vecDate['anio'].'<br/>'.$vecDate['hora'].':'.$vecDate['minutos'];
         
         $this->getVista()->modificarCuerpo('{fecha}',$fechaString);
         $this->getVista()->modificarCuerpo('{dirImg}',$usuario['dirImg']);
@@ -404,12 +405,11 @@ class ControladorSeccion extends ControladorPorDefecto{
         $listaComents=null;
         $vecComents=array_slice($vecComentarios, ($pagina-1)*CANT_COMENTS,CANT_COMENTS,true);
         if ($this->getUsuario()->tieneSesion()&&($pagina-1==intdiv($cantComents-1,10))) {
-            $subMenuSesion=$this->getVista()->crearAreaComentaje($_SESSION["img"]);
-            $this->getVista()->modificarCuerpo('{action}','action="/Seccion/CrearComentario/'.$idTema.'"');          
+            $subMenuSesion=$this->getVista()->crearAreaComentaje($_SESSION["img"]);                    
         }else{
             $subMenuSesion='';
         }
-        $unHref='<li class="page-item"><a class="page-link" href="/Seccion/irTema/'.$idTema.'/';
+        $unHref='<li class="page-item"><a class="page-link" href="/Seccion/irTema/'.$idSec.'/'.$idTema.'/';
         $botones = new Paginacion($pagina,$cantComents,$unHref);
         // listando los comentarios
         foreach ($vecComents as $comentario){
@@ -423,7 +423,7 @@ class ControladorSeccion extends ControladorPorDefecto{
                 :'<div clas=""><a href="'.$usuario["redSocial2"].'"> <img src="/Vistas/imagenes/redSocial2.png" class="icono3"></a></div>';
             ($this->getUsuario()->getRol()=='ADMI')?
                 // Solo mostrar la opcion de borrar el comentario (el borrado efectivo se hace en ControladorAdministrar->metodoEliminarComentario)
-                $borrado = $this->getVista()->crearMenuBorrarMsj($comentario["idComentario"],$idTema,$pagina)                 
+                $borrado = $this->getVista()->crearMenuBorrarMsj($comentario["idComentario"],$idTema,$pagina,$idSec)                 
                 :$borrado='';
             $listaComents .= $this->getVista()->crearListaComentarios($usuario["apodo"],$usuario["dirImg"],$face,$redSoc2,$vecFecha,$comentario["contenido"],$borrado);            
         }       
@@ -434,10 +434,12 @@ class ControladorSeccion extends ControladorPorDefecto{
         $this->getVista()->modificarCuerpo('{paginacion}',$botones->getBotonera());
         $this->getVista()->modificarCuerpo('{tieneSesion}',$subMenuSesion);        
         $this->getVista()->modificarCuerpo('{eliminar}',$borrado);
+        $this->getVista()->modificarCuerpo('{action}','action="/Seccion/CrearComentario/'.$idSec.'/'.$idTema.'"'); 
         return $this->getVista();        
     }
    
-    public function metodoCrearComentario($idTema){
+    public function metodoCrearComentario($idSec,$idTema){
+        if($_POST['unComentario']==NULL||$_POST['unComentario']=='') return $this->msjAtencion('el comentario esta vacío');
         if(filter_var($idTema,FILTER_VALIDATE_INT)){
             Modelo::crearComentario($_SESSION['idUsuario'], $_POST['unComentario'], $idTema);
         }
@@ -449,10 +451,11 @@ class ControladorSeccion extends ControladorPorDefecto{
         }else{
             $pag = intval(($num/CANT_COMENTS))+1;
         }
-        header('Location:http://'.DOMINIO.'/Seccion/irTema/'.$idTema.'/'.$pag);
+        header('Location:http://'.DOMINIO.'/Seccion/irTema/'.$idSec.'/'.$idTema.'/'.$pag);
     }
 
     public function metodoComentarCurso($idCurso){
+        if($_POST['unComentario']==NULL||$_POST['unComentario']=='') return $this->msjAtencion('el comentario esta vacío');
         if(filter_var($idCurso,FILTER_VALIDATE_INT)){
             Modelo::comentarCurso($_SESSION['idUsuario'], $_POST['unComentario'], $idCurso);
         }

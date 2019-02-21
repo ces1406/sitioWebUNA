@@ -17,9 +17,9 @@ function ponerBorrado(event){
 	console.log('this:'+this);
 	var idApunte =this.getElementsByTagName('input')[0].attributes['value'].value;
 
-	var conte ='<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);">';
+	var conte ='<div class="badge badge-primary text-wrap esquinaDer2" style="background-color: rgba(21, 24, 29, 0.9);font-size:1.7ex !important">';
 		conte += '<form class="form-inline" id="" action="/Administrar/EliminarApunte/'+idApunte+'" method="POST" enctype="multipart/form-data">';
-		conte += '	<h6>El comentario se eliminara permanentemente, esta seguro de borrarlo? &nbsp; </h6> ';
+		conte += '	<h3>El comentario se eliminara permanentemente, esta seguro de borrarlo? &nbsp; </h3> ';
 		conte +='	<div class="custom-control custom-radio custom-control-inline"><input type="radio" id="si" name="confirmado" class="custom-control-input" value="si"><label class="custom-control-label" for="si">Si</label></div>';
 		conte +='	<div class="custom-control custom-radio custom-control-inline"><input type="radio" id="no" name="confirmado" class="custom-control-input" value="no"><label class="custom-control-label" for="no">No</label></div>';
 		conte +='	<button type="submit" id="BorrarCurso" value="Borrar" class="btn btn-sm enlace" style="font-size: 1.6ex;">OK</button>';

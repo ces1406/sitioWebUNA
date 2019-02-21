@@ -331,7 +331,7 @@ class Modelo
         $unMysqli->query($sql);
         Modelo::cerrarConexion($unMysqli);
     }
-    public static function ultimosDiez1() {
+    public static function ultimosDiezComentariosXCurso() {
         $vecComent=null;
         $unMysqli=Modelo::conectarDB();
         if($unMysqli==false){return null;}
@@ -346,7 +346,7 @@ class Modelo
         Modelo::cerrarConexion($unMysqli);
         return $vecComent;
     }
-    public static function ultimosDiez2() {
+    public static function ultimosDiezComentariosXCatedra() {
         $vecComent=null;
         $unMysqli=Modelo::conectarDB();
         if($unMysqli==false){return null;}
@@ -378,7 +378,7 @@ class Modelo
         Modelo::cerrarConexion($unMysqli);
         return $vecComent;
     }
-    public static function ultimosDiez3() {
+    public static function ultimosDiezComentariosXTema() {
         $vecComent=null;
         $unMysqli=Modelo::conectarDB();
         if($unMysqli==false){return null;}
@@ -388,6 +388,22 @@ class Modelo
                 $resultado->data_seek($numFila);
                 $vecComent[$numFila-1]=$resultado->fetch_assoc();
             }      
+        $resultado->close();
+        Modelo::cerrarConexion($unMysqli);
+        return $vecComent;
+    }
+    public static function ultimosDiezComentariosIniciales() {
+        $vecComent=null;
+        $unMysqli=Modelo::conectarDB();
+        if($unMysqli==false){return null;}
+        $sql="SELECT * FROM unaWebDB.unaTemas C1 JOIN unaWebDB.unaUsuarios U1 ON U1.idUsuario=C1.idUsuario ORDER BY fechaCreacion DESC LIMIT 10";
+        $resultado=$unMysqli->query($sql);
+            for ($numFila=$resultado->num_rows-1;$numFila>=0;$numFila--){
+                $resultado->data_seek($numFila);
+                $vecComent[$numFila-1]=$resultado->fetch_assoc();
+                $vecComent[$numFila-1]['fechaHora']=$vecComent[$numFila-1]['fechaCreacion'];
+            }
+        
         $resultado->close();
         Modelo::cerrarConexion($unMysqli);
         return $vecComent;

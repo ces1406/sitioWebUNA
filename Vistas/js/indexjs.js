@@ -11,7 +11,7 @@ var fecha= function(date){
 
 var main=function(){
 	ultimosComentarios();
-	setInterval(ultimosComentarios,50000); //50 segs.
+	setInterval(ultimosComentarios,5000000); //50 segs.
 	var fecha1 = new fecha(new Date());
 	fecha1.actualizar();
 }
@@ -55,7 +55,7 @@ function Comentario (aut,cad,fec,tem,secc,idTe,idCa,idCu,codCu,catCu,matCu,catOp
         ((this.cantComents%10)==0) ? pag = this.cantComents/10: pag = Math.trunc((this.cantComents/10))+1;
 				
 		if(this.idTema != null && this.idTema.length !=0){
-			this.enlace ='Seccion/irTema/'+this.idTema+'/'+pag;
+			this.enlace ='Seccion/irTema/'+this.seccion+'/'+this.idTema+'/'+pag;
 			this.pie = 'Seccion: '+this.seccion+' Tema: '+this.tema;
 		}else if(this.idCurso!=null && this.idCurso.length!=0){
 			this.enlace ='Seccion/Curso/'+this.idCurso+'/'+pag;
