@@ -33,7 +33,12 @@ class ControladorSesion extends ControladorPorDefecto
         $this->getUsuario()->setApodo($apodo);
         $this->getUsuario()->setPass($pass);
         if($this->getUsuario()->iniciarSesion()){
-            $this->darSesion();
+            if($this->getUsuario()->getEstadoCuenta()=='HABILIT'){
+                $this->darSesion();
+            }else{
+                return $this->msjAtencion('Tu cuenta ha sido suspendida comunicate con un administrador (
+                    enviale un mail a '.MAIL_ADM.')');
+            }
         }else{
             return $this->msjAtencion('El usuario no existe o la contraseña es incorrecta');
         }

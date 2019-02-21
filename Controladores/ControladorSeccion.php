@@ -23,7 +23,8 @@ class ControladorSeccion extends ControladorPorDefecto{
         $listaTemas=null;
         $vecTemas=array_slice($temas,($pagina-1)*CANT_TEMAS,CANT_TEMAS,true);
         if(!empty($vecTemas)){                          // Listando los temas de la seccion
-            foreach ($vecTemas as $tema){  $listaTemas .= $this->getVista()->crearLiTema($idSeccion,$tema->getIdTema(),$tema->getTitulo());  }
+            foreach ($vecTemas as $tema){  $listaTemas .= $this->getVista()->crearLiTema($idSeccion,$tema->getIdTema(),
+                                                        $tema->getTitulo(),date_parse($tema->getFecha()) );  }
         }
         $unHref='<li class="page-item"><a class="page-link" href="/Seccion/irSeccion/'.$nombreSeccion.'/'.$idSeccion.'/';
         $botones = new Paginacion($pagina,$cantTemas,$unHref);

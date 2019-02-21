@@ -4,6 +4,7 @@ require_once DIR_RAIZ.DIR_APP.'/Modelo.php' ;
 class Usuario{
 
     private $rol;
+    private $estadoCuenta;
     private $idUsuario;
     private $apodo;
     private $password;
@@ -31,19 +32,16 @@ class Usuario{
             return FALSE;
         }
         if( password_verify($this->password,$vecUser['contrasenia']) ){
-            if($vecUser['estadoCuenta']=='HABILIT'){
-                $this->imgAvatar=$vecUser['dirImg'];
-                $this->rol=$vecUser['rol'];
-                $this->mail=$vecUser['mail'];
-                $this->idUsuario=$vecUser['idUsuario'];
-                $this->redSocial1=$vecUser['redSocial1'];
-                $this->redSocial2=$vecUser['redSocial2'];
-                $this->redSocial3=$vecUser['redSocial3'];
-                $this->redSocial4=$vecUser['redSocial4'];
-                return TRUE;
-            }else{
-                return FALSE;
-            }
+            $this->imgAvatar=$vecUser['dirImg'];
+            $this->rol=$vecUser['rol'];
+            $this->mail=$vecUser['mail'];
+            $this->idUsuario=$vecUser['idUsuario'];
+            $this->redSocial1=$vecUser['redSocial1'];
+            $this->redSocial2=$vecUser['redSocial2'];
+            $this->redSocial3=$vecUser['redSocial3'];
+            $this->redSocial4=$vecUser['redSocial4'];
+            $this->estadoCuenta=$vecUser['estadoCuenta'];
+            return TRUE;
         }else{
             return FALSE;
         }
@@ -126,6 +124,9 @@ class Usuario{
     
     public function setMail($param) {
         $this->mail=$param;
+    }
+    public function getEstadoCuenta(){
+        return $this->estadoCuenta;
     }
 }
 ?>

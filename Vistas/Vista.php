@@ -84,9 +84,11 @@ class Vista{
                 .$hora.'<br/>curso: '.$cod.'</h2>';
     }
 
-    public function crearLiTema($idSeccion,$idTema,$titulo){
+    public function crearLiTema($idSeccion,$idTema,$titulo,$fechaCreacion){
+        $fec = $this->normalizarDate($fechaCreacion);
         return '<li class="nav-item li0 enlace "><img src="/Vistas/imagenes/item7.png" width="40" height="40"/>
-                <a href="/Seccion/IrTema/'.$idSeccion.'/'.$idTema.'/1" >'.htmlentities($titulo).'</a>	</li>';
+                <a href="/Seccion/IrTema/'.$idSeccion.'/'.$idTema.'/1" >'.htmlentities($titulo).'</br>
+                <h7 style="font-size: 1.0ex !important;">Creado el&nbsp; '.$fec['dia'].'/'.$fec['mes'].'/'.$fec['anio'].' a las '.$fec['hora'].':'.$fec['minutos'].'</h7></a></li>';
     }
 
     public function crearBotonIniciarTema(){
@@ -232,7 +234,7 @@ class Vista{
         $min=str_pad((int) $vecFecha['minute'],2,"0",STR_PAD_LEFT);
         $mes=str_pad((int) $vecFecha['month'],2,"0",STR_PAD_LEFT);
         $dia=str_pad((int) $vecFecha['day'],2,"0",STR_PAD_LEFT);
-        return $fecha=array('anio'=>$vecFecha[year],
+        return $fecha=array('anio'=>$vecFecha['year'],
                             'mes'=>$mes,
                             'dia'=>$dia,
                             'hora'=>$hora,
