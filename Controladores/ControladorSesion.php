@@ -20,7 +20,7 @@ class ControladorSesion extends ControladorPorDefecto
     }
 
     public function metodoReconocerSesion(){
-        sleep(1);//dormir para evitar ataques de robot?-->Cantidad de intentos?
+        sleep(1);//dormir para evitar ataques de robot/fuerza bruta?-->Cantidad de intentos?
         $apodo=trim($_POST['unApodo']);
         $pass=trim($_POST['unaPassword']);
         if(!isset($apodo)||empty($apodo)||strlen($apodo)>TAM_APODO_MAX||!is_string($apodo)||strlen($apodo)<TAM_APODO_MIN){
