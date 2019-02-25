@@ -272,7 +272,7 @@ class ControladorSeccion extends ControladorPorDefecto{
                 :'<div clas=""><a href="'.$usuario["redSocial2"].'"> <img src="/Vistas/imagenes/redSocial2.png" class="icono3"></a></div>';
             ($this->getUsuario()->getRol()=='ADMI')?
                 // Solo mostrar la opcion de borrar el comentario (el borrado efectivo se hace en ControladorAdministrar->metodoEliminarComentario)
-                $borrado = $this->getVista()->crearMenuBorrarMsj($comentario["idComentario"],$idCatedra,$pagina)                 
+                $borrado = $this->getVista()->crearMenuBorrarMsj($comentario["idComentario"],$idCatedra,$pagina,'vacio')//el ultimo arg es solo p/compatibilidad(pide la seccion en ese lugar)                 
                 :$borrado='';
             $listaComents .= $this->getVista()->crearListaComentarios($usuario["apodo"],$usuario["dirImg"],$face,$redSoc2,$vecFecha,$comentario["contenido"],$borrado);             
         }

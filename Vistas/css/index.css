@@ -229,6 +229,8 @@ body{
 .comentario1 p{
 	font-size: 2.4ex!important;
 	color:#000000 !important;
+	padding: 0ex 0ex 0ex 0ex !important;
+	margin: 0ex 0ex 0ex 0ex !important;
 }
 #comentarioActual{
 	margin: 0.2ex 0.2ex 0.2ex 0.3ex !important;

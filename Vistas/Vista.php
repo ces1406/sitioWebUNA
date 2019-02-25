@@ -71,7 +71,7 @@ class Vista{
 							    <textarea name="unComentario" id="area1"></textarea>
 						    </div>
 					    </div>
-					    <button class="btn btn-secondary btn-sm enlace" type="submit" id="CrearComentario">COmentar</button>
+					    <button class="btn btn-secondary btn-sm enlace" type="submit" id="CrearComentario">comentar</button>
                         <h5 id="aviso"></h5>
                     </form>
                 </div>
@@ -195,7 +195,7 @@ class Vista{
                 <p class="mb-1">Autor/es: '.$apunte['autores'].'<br/>Materia: '.$apunte['materia'].'
                 <br/>Dirección para descargarlo:<small> '.$apunte['dirurl'].'</small></p>
                 <div class="col-mb-1" id="">
-                    <a class="btn btn-sm enlace " href="'.$apunte['dirurl'].'" >Descargar</a>
+                    <a class="btn btn-sm enlace " href="'.$apunte['dirurl'].'" >ver el apunte</a>
                                       '.$borrado.'
 	             </div><img src="/Vistas/imagenes/separador.png" class="separador"><br/>';
     }
