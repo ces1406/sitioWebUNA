@@ -1,4 +1,7 @@
 <?php 
+define('LINK_YOUTUBE',      'https://www.youtube.com/channel/UClfv3GTM04aMzPgnabbhG0w?view_as=subscriber');
+define('LINK_TWITTER',      'https://twitter.com/UNA_visuales');
+define('LINK_FACEBOOK',     'https://www.facebook.com/groups/iuna.artesvisuales/');
 define('NOMBRE_SITIO',      'unaWeb');
 define('DOMINIO',           'www.unaweb.com');
 define('MAIL_ADM',          'comunidad.una.visuales@gmail.com');
