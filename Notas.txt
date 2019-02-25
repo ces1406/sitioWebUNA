@@ -6,5 +6,6 @@ En index.php respecto de como viene la url y como se divide estaba el comentario
  * www.unaweb.com/index.php/argu1/argu2/etc  =>  $args=index.php/argu1/argu2/etc
  * www.unaweb.com/argu1/argu2/etc            =>  $args=/argu1/argu2/etc----->NO MAS index.php
  * */
-
  que fue sacado.
+
+ Nota 2: OJO con los "http://" que figuran en las sentencias header(.......)

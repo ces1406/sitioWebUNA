@@ -360,24 +360,6 @@ class Modelo
         Modelo::cerrarConexion($unMysqli);
         return $vecComent;
     }
-    public static function ultimosDiezTot() {
-        $vecComent=null;
-        $unMysqli=Modelo::conectarDB();
-        if($unMysqli==false){return null;}
-        $sql="  SELECT * FROM unaWebDB.unaComentarioXcatedra C2 JOIN unaWebDB.unaUsuarios U2 ON U2.idUsuario=C2.idUsuario UNION
-                SELECT * FROM unaWebDB.unaComentarios C3 JOIN unaWebDB.unaUsuarios U3 ON C3.idUsuario=U3.idUsuario UNION
-                SELECT * FROM unaWebDB.unaComentarioXcurso C1 JOIN unaWebDB.unaUsuarios U1 ON U1.idUsuario=C1.idUsuario
-                ORDER BY fechaHora DESC LIMIT 10";
-        $resultado=$unMysqli->query($sql);
-        for ($numFila=$resultado->num_rows-1;$numFila>=0;$numFila--){
-            $resultado->data_seek($numFila);
-            $vecComent[$numFila-1]=$resultado->fetch_assoc();
-        }
-        //$vecComent = $resultado->fetch_all(MYSQLI_ASSOC);
-        $resultado->close();
-        Modelo::cerrarConexion($unMysqli);
-        return $vecComent;
-    }
     public static function ultimosDiezComentariosXTema() {
         $vecComent=null;
         $unMysqli=Modelo::conectarDB();

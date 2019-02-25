@@ -1,20 +1,8 @@
-/*@import url('https://fonts.googleapis.com/css?family=Nunito:200,300,400,600,700');*/
-/*@import url('https://fonts.googleapis.com/css?family=Kodchasan:200,300,400,500,600,700');/*
-@import url('https://fonts.googleapis.com/css?family=Bai+Jamjuree:200,300,400,500,600,700');
-@import url('https://fonts.googleapis.com/css?family=Krub:200,300,400,500,600,700');*/
 @import url('https://fonts.googleapis.com/css?family=Montserrat:100,200,300,400,500,600,700,800');
 
 /*GENERALES(APLICABLES A TODO EL SITIO)*/
 *{
-	/*font-family:'Martel Sans' !important;
-	  font-family: 'Nunito', sans-serif;*/
-	  /*font-family: 'Kodchasan', sans-serif;/*
-	  font-family:'Bai Jamjuree', sans-serif;	
-	  font-family: 'Krub', sans-serif;*/
 	  font-family: 'Montserrat', sans-serif;
-	  /*border-style:solid solid solid solid !important;
-		border-color:rgb(243, 247, 8) !important;
-		border-width: 0.1ex;*/
 }
 h1{
 	color: #EFECEA;

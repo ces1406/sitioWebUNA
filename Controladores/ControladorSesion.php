@@ -36,8 +36,8 @@ class ControladorSesion extends ControladorPorDefecto
             if($this->getUsuario()->getEstadoCuenta()=='HABILIT'){
                 $this->darSesion();
             }else{
-                return $this->msjAtencion('Tu cuenta ha sido suspendida comunicate con un administrador (
-                    enviale un mail a '.MAIL_ADM.')');
+                return $this->msjAtencion('Tu cuenta ha sido temporalmente suspendida comunicate con un administrador (
+                    envia un mail a '.MAIL_ADM.')');
             }
         }else{
             return $this->msjAtencion('El usuario no existe o la contraseña es incorrecta');

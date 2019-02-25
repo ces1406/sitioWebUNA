@@ -1,8 +1,8 @@
 	<footer class="footer" id="pie">
 		<div class="container">
-					<a class="btn btn-secondary enlace" href="twitter">Twitter</a>
-					<a class="btn btn-secondary enlace" href="facebooki">Facebook</a>
-					<a class="btn btn-secondary enlace" href="youtubi">Canal de Youtube</a>
+					<a class="btn btn-secondary enlace" href="twitter"><img src="/Vistas/imagenes/twitter.png" class="icono3">&nbsp;Twitter</a>
+					<a class="btn btn-secondary enlace" href="facebooki"><img src="/Vistas/imagenes/facebook.png" class="icono3">&nbsp;Facebook</a>
+					<a class="btn btn-secondary enlace" href="youtubi"><img src="/Vistas/imagenes/youtube.png" class="icono3">&nbsp;Canal de Youtube</a>
 		</div>
 	</footer>
 </div>

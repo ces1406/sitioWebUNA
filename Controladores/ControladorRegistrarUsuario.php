@@ -297,6 +297,7 @@ class ControladorRegistrarUsuario extends ControladorPorDefecto{
         $_SESSION['face'] = $face;
         return 'El facebook se actualizo correctamente'; 
     }
+
     public function cambiarRedSocial1(){
         $pass1=trim($_POST['unaPassword0']);
         $red=trim($_POST['unaRedSocial1']);
@@ -314,6 +315,7 @@ class ControladorRegistrarUsuario extends ControladorPorDefecto{
         $_SESSION['redSoc1'] = $red;
         return 'El link a tu pagina personal se actualizo correctamente'; 
     }
+
     public function cambiarPass() {
         $pass1=trim($_POST['unaPassword1']);
         $pass2=trim($_POST['unaPassword2']);
@@ -338,7 +340,7 @@ class ControladorRegistrarUsuario extends ControladorPorDefecto{
         $token=uniqid(rand(),true);
         $mensaje =  "Hola ".$vecUser['apodo'].", te enviamos este mail para confirmar tu nueva contraseña. ";
         $mensaje .= "Ahora necesitas ir al siguiente enlace para confirmar el cambio: ";
-        $mensaje .= "www.sitioPruebas.com/RegistrarUsuario/Confirmacion/";
+        $mensaje .= DOMINIO."/RegistrarUsuario/Confirmacion/";
         $mensaje .= $vecUser['idUsuario'].'/'.$token;
         if (($resultado=$this->enviarMail($mensaje,$vecUser['mail'],$apodo))!='OK') {
             return $resultado;
@@ -363,7 +365,7 @@ class ControladorRegistrarUsuario extends ControladorPorDefecto{
             $mail->setFrom(MAIL_ADM,'Administrador de MundoUna');
             $mail->addAddress($dirDestino,$apodo);
             $mail->isHTML(TRUE);
-            $mail->Subject="Aviso enviado delsde el sitio una web visuales";
+            $mail->Subject="Aviso enviado desde el sitio ".NOMBRE_SITIO;
             $mail->Body= '<h3>'.$msj.'</h3>';
             $mail->send();
             $resultado='OK';
