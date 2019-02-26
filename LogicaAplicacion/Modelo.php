@@ -495,7 +495,7 @@ class Modelo
         Modelo::cerrarConexion($unMysqli);
         return $vecComents;
     }    
-    public static function cargarCurso($materia,$sede,$catedra,$hora,$cod) {
+    public static function cargarCurso($materia,$sede,$catedra,$hora,$cod,$dias) {
         $vecApuntes=null;
         $unMysqli=Modelo::conectarDB();
         $sede=$unMysqli->real_escape_string($sede);
@@ -504,12 +504,12 @@ class Modelo
         $hora=$unMysqli->real_escape_string($hora);
         $cod=$unMysqli->real_escape_string($cod);
         if($unMysqli==false){return null;}
-        $sql="INSERT INTO unaWebDB.unaCursos (nombreMateria,sede,nombreCatedra,horario,codigo,fechaCreacion) VALUES ('";
-        $sql .= $materia . "','" . $sede . "','" . $catedra . "','" . $hora . "','" . $cod . "',CURRENT_TIMESTAMP())";
+        $sql="INSERT INTO unaWebDB.unaCursos (nombreMateria,sede,nombreCatedra,horario,codigo,fechaCreacion,dias) VALUES ('";
+        $sql .= $materia . "','" . $sede . "','" . $catedra . "','" . $hora . "','" . $cod . "',CURRENT_TIMESTAMP(),'".$dias."')";
         $resultado=$unMysqli->query($sql);
         Modelo::cerrarConexion($unMysqli);
     }    
-    public static function buscarCurso($mat,$cat,$sed,$cod,$hora) {
+    public static function buscarCurso($mat,$cat,$sed,$cod,$hora,$dias) {
         $vecApuntes=null;
         $unMysqli=Modelo::conectarDB();
         $sed=$unMysqli->real_escape_string($sed);
@@ -519,7 +519,7 @@ class Modelo
         $cod=$unMysqli->real_escape_string($cod);
         if($unMysqli==false){return null;}
         $sql="SELECT * FROM unaWebDB.unaCursos WHERE nombreMateria LIKE ('%".$mat."%') AND nombreCatedra LIKE ('%".$cat."%') AND sede LIKE ('%".$sed."%')";
-        $sql.= "AND codigo LIKE ('%".$cod."%') AND horario LIKE ('%".$hor."%') ORDER BY fechaCreacion DESC";
+        $sql.= "AND (dias LIKE ('%".$dias."%') OR dias IS NULL) AND codigo LIKE ('%".$cod."%') AND (horario LIKE ('%".$hor."%') OR horario IS NULL) ORDER BY fechaCreacion DESC";
         //echo nl2br("\n sql: ".$sql);
         $resultado=$unMysqli->query($sql);
         for ($numFila=$resultado->num_rows-1;$numFila>=0;$numFila--){
@@ -533,7 +533,7 @@ class Modelo
         Modelo::cerrarConexion($unMysqli);
         return $vecApuntes;
     }    
-    public static function buscarCursoRepe($mat,$cat,$sed,$cod,$hora) {
+    public static function buscarCursoRepe($mat,$cat,$sed,$cod,$hora,$dias) {
         $vecApuntes=null;
         $unMysqli=Modelo::conectarDB();
         $sed=$unMysqli->real_escape_string($sed);
@@ -543,7 +543,7 @@ class Modelo
         $cod=$unMysqli->real_escape_string($cod);
         if($unMysqli==false){return null;}
         $sql="SELECT * FROM unaWebDB.unaCursos WHERE nombreMateria='".$mat."' AND nombreCatedra='".$cat."' AND sede='".$sed."'";
-        $sql.= "AND codigo='".$cod."' AND horario='".$hor."'";
+        $sql.= "AND codigo='".$cod."' AND horario='".$hor."' AND dias='".$dias."'";
         echo nl2br("\n sql: ".$sql);
         $resultado=$unMysqli->query($sql);
         for ($numFila=$resultado->num_rows-1;$numFila>=0;$numFila--){

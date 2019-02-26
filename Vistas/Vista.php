@@ -32,24 +32,24 @@ class Vista{
         foreach ($vecSecciones as $seccion){
             if($seccion['nombreSeccion']=='Apuntes'){
                 $metodo= 'IrAApuntes/default/0';
-                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
+                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" class="img-fluid" width="40" ';
                 $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo.'/'.$seccion["nombreSeccion"];
                 $listaSecciones .= '/'.$seccion["idSeccion"].'/1">'. $seccion["nombreSeccion"].'<br/><h6>';
                 $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
             }elseif($seccion['nombreSeccion']=='Cursos por cátedras'){
                 $metodo= 'CursosCatedras/default';
-                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
+                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" class="img-fluid" width="40" ';
                 $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo.'">'. $seccion["nombreSeccion"].'<br/><h6>';
                 $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
             }elseif($seccion['nombreSeccion']=='Opiniones de cátedras y profesores'){
                 $metodo= 'IrOpiniones/default';
-                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
+                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" class="img-fluid" width="40" ';
                 $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo;
                 $listaSecciones .= '/1">'. $seccion["nombreSeccion"].'<br/><h6>';
                 $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
             }else{
                 $metodo='IrSeccion';
-                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" width="40" ';
+                $listaSecciones .= '<li class="nav-item li0 enlace"><img src="/Vistas/imagenes/item7.png" class="img-fluid" width="40" ';
                 $listaSecciones .= 'height="40"/><a href="/Seccion/'.$metodo.'/'.$seccion["nombreSeccion"];
                 $listaSecciones .= '/'.$seccion["idSeccion"].'/1">'. $seccion["nombreSeccion"].'<br/><h6>';
                 $listaSecciones .= $seccion['descripcion'].'</h6></a></li>';
@@ -62,7 +62,7 @@ class Vista{
         return '
             <div class="media">
                 <div class="media-left">
-                    <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="mr-3 icono2 media-object" >
+                    <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="mr-3 icono2 media-object img-fluid" >
                 </div>
                 <div class="media-body">
                     <form class="form-horizontal" id="crearComentario" {action} method="POST">
@@ -77,11 +77,11 @@ class Vista{
                 </div>
             </div>
             
-            <img src="/Vistas/imagenes/separador.png" class="separador">';
+            <img src="/Vistas/imagenes/separador.png" class="separador ">';
     }
-    public function crearTituloTemaCurso($mate,$catedra,$sede,$hora,$cod){
+    public function crearTituloTemaCurso($mate,$catedra,$sede,$hora,$cod,$dias){
         return '<h2>Materia: '.$mate.'<br/>cátedra: '.$catedra.'<br/>sede: '.$sede.'<br/>horario: '
-                .$hora.'<br/>curso: '.$cod.'</h2>';
+                .$hora.' dias:'.$dias.'<br/>curso: '.$cod.'</h2>';
     }
 
     public function crearLiTema($idSeccion,$idTema,$titulo,$fechaCreacion){
@@ -110,7 +110,7 @@ class Vista{
             foreach ($vecCursos as $curso) {
                 $busqueda .='<a href="/Seccion/Curso/'.$curso['idCurso'].'/1" class="enlace">
                 <div class="d-flex w-100 justify-content-between"><h5 class="mb-1">Materia: '.$curso['nombreMateria'].'</h5><small>Horario: '
-                .$curso['horario'].'</small></div><p class="mb-1">Catedra: '.$curso['nombreCatedra'].'<br/>Sede: '.$curso['sede']
+                .$curso['horario'].' dias:'.$curso['dias'].'</small></div><p class="mb-1">Catedra: '.$curso['nombreCatedra'].'<br/>Sede: '.$curso['sede']
                 .'<br/>Código de curso:<small> '.$curso['codigo'].'</small></p> </a>
                 <img class="card-img-top " src="/Vistas/imagenes/item12.png" height="10" alt="Card image cap">';
             }
@@ -217,7 +217,7 @@ class Vista{
         return '<div class="media">
                     <div class="media-left">
                         <h3 class="media-heading">'.htmlentities($apodo).' </h3>
-                        <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="icono2 media-object" >
+                        <img src="/Vistas/imagenesUsers/'.$dirImg.'" class="icono2 media-object img-fluid" >
                             '.$face.$redSoc2.'
                     </div>
                     <div class="media-body "><h6 class="text-right"> '.$fecha[dia].'/'.$fecha[mes].'/'.$fecha[anio].'<br/>'.$fecha[hora].':'.$fecha[minutos].'</h6>

@@ -73,7 +73,7 @@ class ControladorSeccion extends ControladorPorDefecto{
         $this->getVista()->modificarCuerpo('{colIzq}','12');
         $curso=Modelo::buscarUnCurso($idCurso);
         $this->getVista()->modificarCuerpo('{curso}',$this->getVista()->crearTituloTemaCurso($curso['nombreMateria'],$curso['nombreCatedra'],
-                                                                                        $curso['sede'],$curso['horario'],$curso['codigo']));
+                                                                                        $curso['sede'],$curso['horario'],$curso['codigo'],$curso['dias']));
         $vecComentarios = Modelo::buscarComentsCurso($idCurso);
         $cantComents=count($vecComentarios);
         $listaComents=null;
@@ -117,6 +117,13 @@ class ControladorSeccion extends ControladorPorDefecto{
             $codigo=trim($_POST['unCodigo']);
             $materia=trim($_POST['unaMateria']);
             $sede=trim($_POST['unaSede']);
+            $dias=null;
+            for ($i=0; $i <6 ; $i++) { 
+                if(isset($_POST[(string)($i+1)])){
+                    $dias .=$_POST[(string)($i+1)].' ';
+                }
+            }
+            $dias = trim($dias);
 
             if(empty($catedra)||strlen($catedra)>TAM_CATEDRA_MAX ||!is_string($catedra))return $this->msjAtencion('error en la catedra ingresada');
             if(strlen($codigo)>TAM_MAX_CODCURSO||!is_string($codigo))                   return $this->msjAtencion('error en el codigo ingresado');
@@ -124,13 +131,13 @@ class ControladorSeccion extends ControladorPorDefecto{
             if(empty($sede)||strlen($sede)>TAM_SEDE_MAX||!is_string($sede))             return $this->msjAtencion('error en la sede ingresada');
           
             $horario = $_POST['horaInicio'].':'.$_POST['minInicio'].' a '.$_POST['horaFin'].':'.$_POST['minFin'];
-            $cursoRepe=Modelo::buscarCursoRepe($materia,$catedra,$sede,$codigo,$horario);
+            $cursoRepe=Modelo::buscarCursoRepe($materia,$catedra,$sede,$codigo,$horario,$dias);
             if(count($cursoRepe)!=0){
                 return $this->msjAtencion('Ya existe un curso<br/>Materia: '.$materia.'&nbsp;Catedra: '.$catedra.'&nbsp;Sede: '
                                             .$sede.'&nbsp;Codigo: '.$codigo.'&nbsp;Horario: '.$horario);
             }
-            Modelo::cargarCurso($materia,$sede,$catedra,$horario,$codigo);
-            $curso = Modelo::buscarCurso($materia,$catedra,$sede,$codigo,$horario);
+            Modelo::cargarCurso($materia,$sede,$catedra,$horario,$codigo,$dias);
+            $curso = Modelo::buscarCurso($materia,$catedra,$sede,$codigo,$horario,$dias);
             header('Location:http://'.DOMINIO.'/Seccion/Curso/'.$curso[0]['idCurso'].'/1');
         }elseif($param=='search'){
             // Sanitizando y validando
@@ -138,6 +145,12 @@ class ControladorSeccion extends ControladorPorDefecto{
             $codigo=trim($_POST['unCodigo']);
             $materia=trim($_POST['unaMateria']);
             $sede=trim($_POST['unaSede']);
+            $dias=null;
+            for ($i=0; $i <6 ; $i++) { 
+                if(isset($_POST[(string)($i+1)])){
+                    $dias .=$_POST[(string)($i+1)].' ';
+                }
+            }
             if(strlen($catedra)>TAM_CATEDRA_MAX ||!is_string($catedra))     return $this->msjAtencion('error en la catedra ingresada');
             if(strlen($codigo)>TAM_MAX_CODCURSO||!is_string($codigo))       return $this->msjAtencion('error en el codigo ingresado');
             if(strlen($materia)>TAM_MATERIA_MAX || !is_string($materia))    return $this->msjAtencion('error en la materia ingresada');
@@ -146,7 +159,7 @@ class ControladorSeccion extends ControladorPorDefecto{
             $horario = $_POST['horaInicio'].':'.$_POST['minInicio'].' a '.$_POST['horaFin'].':'.$_POST['minFin'];
             if($horario ==': a :') $horario=NULL;
             
-            $vecCursos=Modelo::buscarCurso($materia,$catedra,$sede,$codigo,$horario);
+            $vecCursos=Modelo::buscarCurso($materia,$catedra,$sede,$codigo,$horario,$dias);
             $busqueda=$this->getVista()->listaCursosBuscados($vecCursos);
             $sectorBusq ='';
         }elseif ($param=='default'){
