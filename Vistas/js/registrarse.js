@@ -89,6 +89,7 @@ function chequearCampos(event){
 		}
 	}
 	console.log(pass1.value.length);
+
 	if(pass1.value.length<6 || pass1.value==null || pass1.value.length>8){
 		var small3=document.getElementById('avisoPass1');
 		small3.textContent='LA CONTRASEÑA DEBEN TENER ENTRE 5 Y 8 CARACTERES';
@@ -97,8 +98,11 @@ function chequearCampos(event){
 		pass2.value=null;
 		cancelar=true;
 	}
+	console.log("llendo atestear el mail");
 	if(mail!=null){
+		console.log("testeando el mail");
 		if(expReg.test(mail.value)){
+			console.log("testeo ok?");
 			var small4=document.getElementById('avisoMail');
 			small4.textContent='LA DIRECCION DE MAIL TIENE UN FORMATO INCORRECTO';
 			small4.setAttribute("style","color:#FB9209 !important;font-weight:bold !important;");
@@ -110,7 +114,6 @@ function chequearCampos(event){
 		event.preventDefault();
 		return false;
 	}	
-	while(1){};
 	return true;
 }
 function mailRepetido(){
