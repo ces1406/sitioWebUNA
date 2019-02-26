@@ -1,5 +1,5 @@
 <?php
-//error_reporting(0);// ------>OJO CUANDO SE DESACTIVA NO SE MANTIENEN SESIONES
+error_reporting(0);// ------>OJO CUANDO SE DESACTIVA NO SE MANTIENEN SESIONES
 $dir = dirname(__FILE__,1);
 define('DIR_RAIZ',          $dir);
 define('DIR_APP',           '/LogicaAplicacion');
